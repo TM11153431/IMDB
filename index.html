@@ -1,0 +1,52 @@
+<!-- 
+Nathan Bijleveld
+
+10590943
+
+index.html
+ -->
+
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+<head>
+	<script src="libraries/jquery.min.js"></script>
+	<script src="libraries/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="libraries/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+</head>
+<body>
+		    <script src="scripts/imdb.js"></script>
+
+<form>
+    <div class="row">
+	    <div class="col-xs-4">
+			<label for="ex1">Movie title</label>
+			<div class="input-group">
+	   		<input type="text" class="form-control" id="searchbox" placeholder="Enter movie title">
+				<div class="input-group-btn">
+	  				<button class="btn btn-default" type="submit"  onClick="search()">
+	    				<i class="glyphicon glyphicon-search"></i>
+	  				</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+	<div class="row">
+	    <div class="col-sm-6" style="background-color:lavender;">graph1
+			<svg id="graph" width="700" height="300"></svg>
+	    </div>
+	    <div class="col-sm-6" style="background-color:lavenderblush;">graph2
+			<svg id="graph" width="700" height="300"></svg>
+	    </div>
+  	</div>
+  	<div class="row">
+  		<div class="col-sm-8" style="background-color: lightblue;">graph3
+			<svg id="graph" width="700" height="300"></svg>
+		</div>
+	</div>
+
+</body>
+</html>
