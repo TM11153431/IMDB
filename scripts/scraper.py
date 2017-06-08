@@ -4,7 +4,7 @@ import scrapeID
 import json
 
 topID = scrapeID.get_top250()
-movies = []
+movies = {}
 jsonfile = open('dataset.json', 'w')
 
 for id in topID:
@@ -40,7 +40,9 @@ for id in topID:
 	year = soup.find('span', id="titleYear").find('a').string
 
 	print id
-	movies.append({title: {"Year": year, "Score": score, "Genres": genres, "Related": relations}})
+
+	movies[title] = {"Year": year, "Score": score, "Genres": genres, "Related": relations}
+	# movies.append(title: {"Year": year, "Score": score, "Genres": genres, "Related": relations})
 
 json.dump(movies, jsonfile)
 print movies

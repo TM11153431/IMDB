@@ -1,12 +1,11 @@
+d3.json("scripts/dataset.json", function(error, data) {
+	if (error) throw error;
+
+console.log(data)
 function search() {
 	input = document.getElementById("searchbox").value
 	alert(input)
 
-	$.ajax({
-	  type: "POST",
-	  url: "~/scraper.py",
-	  data: { param: input}
-	}).done(function( o ) {
-	   console.log('test')
-	});
+
 }
+})
