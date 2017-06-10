@@ -2,7 +2,8 @@
 Started building an IMDB scraper and making a prototype site. Important decision was to limit the data to the top 250 IMDB movies, since those are the most relevant and it also takes a lot of time to scrape data. At last limiting to top 250 improves the capability to compare data point and therefore improves the storytelling
 
 # day 2
-Finished scraper for the most important part and parse it to a json file. For now the file contains: Title, Year, Score, Genres and related movies. Later on extra data could be added. But for now this will be a good start.
+Finished scraper for the most important part and parse it to a json file. Most important change was to scrape all movies instead of just one to test whether it works. Hence an extra script was needed that provides me with the movie id's. Those are used to iterate over all movies to scrape them when iterating. 
+For now the json file contains: Title, Year, Score, Genres and related movies. Later on extra data could be added. But for now this will be a good start.
 Started linking the search box to the data
 Imported decision was to change one graph to a scatterplot, hence it will provide an overview where the selected data can ben compared with the other top 250 movies. So instead of two graphs providing info about the selected movies, one graph will be changed and provide informatie about the selected movie compared to the other movies. This therefore will be a scatter plot.
 
