@@ -2,12 +2,19 @@ from bs4 import BeautifulSoup
 import requests
 import scrapeID
 import json
+from unidecode import unidecode
+import sys  
+
+reload(sys)  
+sys.setdefaultencoding('utf8')
 
 topID = scrapeID.get_top250()
 movies = {}
 jsonfile = open('dataset.json', 'w')
 
 for id in topID:
+
+# url = "http://www.imdb.com/title/tt" + topID[0] +"/"
 
 	url = "http://www.imdb.com/title/tt" + id +"/"
 	r = requests.get(url)
@@ -16,9 +23,11 @@ for id in topID:
 	soup = BeautifulSoup(r.content, 'html.parser')
 
 	title = soup.find("h1", itemprop="name").contents[0]
+	title = unidecode(title).rstrip()
+	print title
+
 	score = soup.find("span", itemprop="ratingValue").string
 	genres = soup.find_all("span", itemprop="genre")
-	print title
 
 	for i in range(len(genres)):
 		genres[i] = genres[i].string

@@ -15,8 +15,39 @@ index.html
 	<script src="libraries/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
     <script src="libraries/d3.v3.min.js"></script>
     <link rel="stylesheet" href="libraries/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="libraries/jquery-ui.css">
+    <script src="libraries/jquery-ui.js"></script>
 </head>
 <body>
+	<style>
+
+
+
+	.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.dot {
+  stroke: #000;
+}
+
+.tooltip {
+	text-align: left;
+  position: absolute;
+  padding: 5px;
+  width: 300px;
+  height: 60px;
+  pointer-events: none;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;	
+}
+
+</style>
+
 		    <script src="scripts/imdb.js"></script>
 
 <form>
@@ -26,7 +57,7 @@ index.html
 			<div class="input-group">
 	   		<input type="text" class="form-control" id="searchbox" placeholder="Enter movie title">
 				<div class="input-group-btn">
-	  				<button class="btn btn-default" type="submit"  onClick="search()">
+	  				<button class="btn btn-default" type="button" id="searchButton">
 	    				<i class="glyphicon glyphicon-search"></i>
 	  				</button>
 				</div>
@@ -36,8 +67,8 @@ index.html
 </form>
 
 	<div class="row">
-	    <div class="col-sm-6" style="background-color:lavender;">graph1
-			<svg id="graph" width="700" height="300"></svg>
+	    <div id="tooltip" class="col-sm-6" style="background-color:lavender;">
+			<svg id="graph1"></svg>
 	    </div>
 	    <div class="col-sm-6" style="background-color:lavenderblush;">graph2
 			<svg id="graph" width="700" height="300"></svg>
