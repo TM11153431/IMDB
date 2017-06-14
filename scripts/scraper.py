@@ -30,7 +30,8 @@ for id in topID:
 	genres = soup.find_all("span", itemprop="genre")
 
 	for i in range(len(genres)):
-		genres[i] = genres[i].string
+		genres[i] = unidecode(genres[i].string).rstrip()
+		print genres[i]
 
 	relations =[]
 
@@ -40,18 +41,34 @@ for id in topID:
 
 		for relate in page.find_all("img"):
 			# print relate['alt']
-			relations.append(relate['alt'])
+			relations.append(unidecode(relate['alt']))
 
 		# for relate in related[1].find_all("img"):
 		# 	# print relate['alt']
 		# 	relations.append(relate['alt'])
 
 	year = soup.find('span', id="titleYear").find('a').string
-
+	print relations
 	print id
 
-	movies[title] = {"Year": year, "Score": score, "Genres": genres, "Related": relations}
+	url = "http://www.imdb.com/title/tt" + id +"/ratings"
+# url = "http://www.imdb.com/title/tt0109830/ratings"
+	r = requests.get(url)
+	url = r.text
+
+	soup = BeautifulSoup(r.content, 'html.parser')
+	scores = []
+
+	count = 0
+	for words in soup.find('table').find_all('td', align="right"):
+		if count % 2 == 1:
+			scores.append(words.contents[0])
+		count += 1
+
+	movies[title] = {"Year": year, "Score": score, "Genres": genres, "Related": relations, "ScoreInfo": scores}
 	# movies.append(title: {"Year": year, "Score": score, "Genres": genres, "Related": relations})
+
+
 
 json.dump(movies, jsonfile)
 print movies

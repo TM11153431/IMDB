@@ -30,9 +30,11 @@ index.html
   shape-rendering: crispEdges;
 }
 
-.dot {
-  stroke: #000;
-}
+/*.dot {
+  stroke: lightgrey;
+
+
+}*/
 
 .tooltip {
 	text-align: left;
@@ -41,10 +43,12 @@ index.html
   width: 300px;
   height: 60px;
   pointer-events: none;
-  background: lightsteelblue;
+  background: lightblue;
   border: 0px;
-  border-radius: 8px;	
+  border-radius: 8px;
 }
+
+
 
 </style>
 
@@ -67,16 +71,16 @@ index.html
 </form>
 
 	<div class="row">
-	    <div id="tooltip" class="col-sm-6" style="background-color:lavender;">
+	    <div id="tooltip1" class="col-sm-6">
 			<svg id="graph1"></svg>
 	    </div>
-	    <div class="col-sm-6" style="background-color:lavenderblush;">graph2
+	    <div id="tooltip2" class="col-sm-6" style="background-color:lavenderblush;">graph2
 			<svg id="graph" width="700" height="300"></svg>
 	    </div>
   	</div>
   	<div class="row">
-  		<div class="col-sm-8" style="background-color: lightblue;">graph3
-			<svg id="graph" width="700" height="300"></svg>
+  		<div id="tooltip3" class="col-sm-8" >
+			<svg id="graph3" width="700" height="300"></svg>
 		</div>
 	</div>
 
