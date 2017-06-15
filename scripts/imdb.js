@@ -17,6 +17,9 @@ d3.json("scripts/dataset.json", function(error, data) {
     for (var key in data) {
     	scatterData.push({"Title": key, "Year": data[key].Year, "Score": data[key].Score})
     	titles.push(key)
+      for (i = 0; i < data[key].ScoreInfo.length; i++) {
+        data[key].ScoreInfo[i] = +data[key].ScoreInfo[i];
+      }
   	}
 
   	// add searchbox suggestions
@@ -123,6 +126,7 @@ d3.json("scripts/dataset.json", function(error, data) {
                 .on("click", function(d){
             updateScatter(d.Title)
             updateNodes(d.Title)
+            updateBarchart(d.Title)
         });
         // .style("fill", function(d) { return color(d.Wage); });
 
@@ -132,7 +136,7 @@ d3.json("scripts/dataset.json", function(error, data) {
 
     var graph = data["Amelie"].Nodes
 
-    var tooltipNode = d3.select("#tooltip1").append("div")
+    var tooltipNode = d3.select("#tooltip3").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0);
 
@@ -183,7 +187,8 @@ d3.json("scripts/dataset.json", function(error, data) {
                             + "<br/> Score:  " + data[d.name].Score)
                
                .style("left", (d3.event.pageX + 5) + "px")
-               .style("top", (d3.event.pageY - 28) + "px");
+               .style("top", (d3.event.pageY - 330 - 28) + "px")
+               .style("background-color", colorNode(d.group) );
         })
         .on("mouseout", function(d) {
             tooltipNode.transition()
@@ -195,6 +200,7 @@ d3.json("scripts/dataset.json", function(error, data) {
         .on("click", function(d){
             updateScatter(d.name)
             updateNodes(d.name)
+            updateBarchart(d.name)
         });
 
     // node.append("title")
@@ -215,7 +221,125 @@ d3.json("scripts/dataset.json", function(error, data) {
 
         updateScatter(input)
         updateNodes(input)
+        updateBarchart(input)
     })
+
+    /***** Barchart part ******/
+
+            var tooltipBarchart = d3.select("#tooltip2").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+
+        var margin = {top: 20, right: 20, bottom: 30, left: 60},
+        width = 600 - margin.left - margin.right,
+        height = 330 - margin.top - margin.bottom;
+
+    var svgBarchart = d3.select("#graph2")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+    var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+
+    var y = d3.scale.linear().range([height, 0]);
+
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+        // .tickFormat(d3.time.format("%Y-%m"));
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .ticks(10);
+
+  x.domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  y.domain([0, d3.max(data['Amelie'].ScoreInfo, function(d) { return d; })]);
+
+var totalVotes = 0;
+
+for (i in data['Amelie'].ScoreInfo) {
+  totalVotes += data['Amelie'].ScoreInfo[i];
+}
+
+console.log(totalVotes)
+
+  svgBarchart.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .selectAll("text")
+      .style("text-anchor", "end")
+      .attr("dx", ".30em")
+      // .attr("dy", "-.55em");
+      // .attr("transform", "rotate(-90)" );
+
+  svgBarchart.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Votes");
+
+  var bar = svgBarchart.selectAll("bar")
+      .data(data['Amelie'].ScoreInfo);
+    bar.enter().append("rect")
+      .style("fill", "steelblue")
+      .attr("x", function(d, i) { return x(10 - i); })
+      .attr("width", x.rangeBand())
+      .attr("y", function(d, i) { console.log(y(d)); return y(d); })
+      .attr("height", function(d, i) { return height - y(d); });
+
+
+
+bar
+  .on("mouseover", function(d) {
+  tooltipBarchart.transition()
+  .duration(200)
+  .style("opacity", .9);
+            tooltipBarchart.html("Votes: " + d
+                            + "<br/> Percentage: " + Math.round(d / totalVotes * 100) + "%")
+               
+               .style("left", (d3.event.pageX + 5 - 630) + "px")
+               .style("top", (d3.event.pageY - 28) + "px");
+        })
+        .on("mouseout", function(d) {
+            tooltipBarchart.transition()
+               .duration(500)
+               .style("opacity", 0);
+        });
+
+  /**** trasition barchart ***/
+function updateBarchart(input) {
+  totalVotes = 0;
+
+for (i in data[input].ScoreInfo) {
+  totalVotes += data[input].ScoreInfo[i];
+}
+
+  y.domain([0, d3.max(data[input].ScoreInfo, function(d) { return d; })]);
+  svgBarchart.select(".y.axis").transition().duration(300).call(yAxis);
+
+
+  var bar = svgBarchart.selectAll("rect")
+      .data(data[input].ScoreInfo);
+
+      bar.transition()
+        .duration(750)      
+      .style("fill", "steelblue")
+      .attr("x", function(d, i) { return x(10 - i); })
+      .attr("width", x.rangeBand())
+      .attr("y", function(d, i) { console.log(y(d)); return y(d); })
+      .attr("height", function(d, i) { return height - y(d); });
+}
+
+    /***** functions ******/
 
     function updateScatter(input) {
         if (history != '') {
@@ -238,6 +362,8 @@ d3.json("scripts/dataset.json", function(error, data) {
 
         var graph = data[input].Nodes
 
+        console.log(graph)
+
         force
             .nodes(graph.nodes)
             .links(graph.links)
@@ -254,9 +380,10 @@ d3.json("scripts/dataset.json", function(error, data) {
             .data(graph.nodes)
           .enter().append("circle")
             .attr("class", "node")
-            .attr("r", 20)
-            .style("fill", function(d) { return colorNode(d.group); })
+            .attr("r", 40)
+            .style("fill", function(d) { return console.log(d); colorNode(d.group); })
             .call(force.drag);
+
     }
 
 

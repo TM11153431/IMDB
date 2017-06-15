@@ -36,7 +36,7 @@ index.html
 
 }*/
 
-.tooltip {
+#tooltip1 .tooltip {
 	text-align: left;
   position: absolute;
   padding: 5px;
@@ -44,6 +44,30 @@ index.html
   height: 60px;
   pointer-events: none;
   background: lightblue;
+  border: 0px;
+  border-radius: 8px;
+}
+
+#tooltip2 .tooltip {
+	text-align: left;
+  position: absolute;
+  padding: 5px;
+  width: 100px;
+  height: 60px;
+  pointer-events: none;
+  background: lightgrey;
+  border: 0px;
+  border-radius: 8px;
+}
+
+#tooltip3 .tooltip {
+	text-align: left;
+  position: absolute;
+  padding: 5px;
+  width: 300px;
+  height: 60px;
+  pointer-events: none;
+  /*background: red;*/
   border: 0px;
   border-radius: 8px;
 }
@@ -74,8 +98,8 @@ index.html
 	    <div id="tooltip1" class="col-sm-6">
 			<svg id="graph1"></svg>
 	    </div>
-	    <div id="tooltip2" class="col-sm-6" style="background-color:lavenderblush;">graph2
-			<svg id="graph" width="700" height="300"></svg>
+	    <div id="tooltip2" class="col-sm-6">
+			<svg id="graph2" width="700" height="300"></svg>
 	    </div>
   	</div>
   	<div class="row">
