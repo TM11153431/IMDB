@@ -65,7 +65,7 @@ for id in topID:
 			scores.append(words.contents[0])
 		count += 1
 
-	movies[title] = {"Year": year, "Score": score, "Genres": genres, "Related": relations, "ScoreInfo": scores}
+	movies[title] = {"ID": id, "Year": year, "Score": score, "Genres": genres, "Related": relations, "ScoreInfo": scores}
 	# movies.append(title: {"Year": year, "Score": score, "Genres": genres, "Related": relations})
 
 
