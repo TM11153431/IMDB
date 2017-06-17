@@ -13,6 +13,10 @@ d3.json("scripts/dataset.json", function(error, data) {
     // initialize array for searchbox suggestions
     var titles = []
 
+    // initialize dict for genre selection
+
+    var genreID = {}
+
     // organize data for scatter
     for (var key in data) {
         scatterData.push({"Title": key, "Year": data[key].Year, "Score": data[key].Score})
@@ -20,7 +24,15 @@ d3.json("scripts/dataset.json", function(error, data) {
         for (i = 0; i < data[key].ScoreInfo.length; i++) {
             data[key].ScoreInfo[i] = +data[key].ScoreInfo[i];
         }
+        for (i in data[key].Genres) {
+            if (!(data[key].Genres[i] in genreID)) {
+                genreID[data[key].Genres[i]] = []
+            }
+            genreID[data[key].Genres[i]].push(data[key].ID)
+        }
     }
+
+    console.log(genreID)
 
 	// add searchbox suggestions
     $( function() {
@@ -225,6 +237,38 @@ d3.json("scripts/dataset.json", function(error, data) {
         updateNodes(input)
         updateBarchart(input)
     })
+
+    d3.select('#checkbox').on('change', function() {
+        values = document.getElementById("checkbox")
+        // console.log(values.length)
+
+        temp = []
+        for (i = 0; i < values.length; i++) {
+            console.log(values[i].checked)
+            if (values[i].checked) {
+                temp.push((values[i]).value)
+            }
+        }
+                svgScatter.selectAll("#graph1 .dot").transition()
+                    .duration(2000)
+                    .attr("r", 0)
+                    .style("fill", 'lightblue');        
+        for (i in temp) {
+            for (j in genreID[temp[i]]){
+                movID = genreID[temp[i]][j]
+
+                
+                svgScatter.select("#dot_" + movID).transition()
+                    .duration(2000)
+                    .attr("r", 2.5)
+                    .style("fill", 'lightblue');
+            }
+        }
+    })
+    $("#checkAll").click(function(){
+    $('input:checkbox').not(this).prop('checked', this.checked);
+});
+
 
     /***** Barchart part ******/
 
