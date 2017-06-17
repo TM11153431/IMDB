@@ -9,7 +9,7 @@ for title in movies:
 	nodes = []
 	links = []
 
-
+	j = 0
 	nodes.append({"name": title, "group": 0})
 
 	# loop over related movie titles for current movie
@@ -18,12 +18,13 @@ for title in movies:
 		print related
 		print 'related to:'
 		count = 0
-		j = 0
 
 		# loop over related movies for current related movie
 		if related in movies:
+			j += 1
+
 			for check in movies[related]["Related"]:
-				j += 1
+				
 				# loop over related movie titles for current movie
 				for i in range(len(movies[title]["Related"])):
 
@@ -31,12 +32,12 @@ for title in movies:
 					if check == movies[title]["Related"][i]:
 						print check
 						count += 1
-				nodes.append({"name": related, "group": count})
-				links.append({"source": 0, "target": j})
+			nodes.append({"name": related, "group": count})
+			links.append({"source": 0, "target": j})
 	movies[title]["Nodes"] = { "nodes": nodes, "links": links}
 
 
-print movies
+print movies['Toy Story']['Nodes']
 json.dump(movies, jsonfile)
 
 # 	print related
