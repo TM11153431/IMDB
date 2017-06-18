@@ -97,7 +97,7 @@ d3.json("scripts/dataset.json", function(error, data) {
         .attr("x", width)
         .attr("y", -6)
         .style("text-anchor", "end")
-        .text("GDP per capita (US$)");
+        .text("Year");
 
     // set y-axis
     svgScatter.append("g")
@@ -109,7 +109,7 @@ d3.json("scripts/dataset.json", function(error, data) {
         .attr("y", 6)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text("Inflation consumer prices (annual %)")
+        .text("Averag IMDB score")
 
     // fill graph with dots
     svgScatter.selectAll(".dot")
@@ -156,7 +156,9 @@ d3.json("scripts/dataset.json", function(error, data) {
     var width = 960,
         height = 500;
 
-    var colorNode = d3.scale.category20(),
+    var colorNode = d3.scale.ordinal()
+        .domain([0,1,2,3,4,5,6,7,8,9,10,11,12])
+        .range(['#fff7f3','#fde0dd','#fcc5c0','#fa9fb5','#f768a1','#dd3497','#ae017e','#7a0177','#49006a']),
         colorLink = d3.scale.category10();
 
 
@@ -198,7 +200,8 @@ d3.json("scripts/dataset.json", function(error, data) {
                .style("opacity", .9);
             tooltipNode.html("Title: " + d.name 
                             + "<br/> Year: " + data[d.name].Year 
-                            + "<br/> Score:  " + data[d.name].Score)
+                            + "<br/> Score:  " + data[d.name].Score
+                            + "<br/> Number of links: " + d.group)
                
                .style("left", (d3.event.pageX + 5) + "px")
                .style("top", (d3.event.pageY - 330 - 28) + "px")
@@ -313,6 +316,7 @@ d3.json("scripts/dataset.json", function(error, data) {
 
     console.log(totalVotes)
 
+    // initialilze x-axis
     svgBarchart.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
@@ -320,9 +324,11 @@ d3.json("scripts/dataset.json", function(error, data) {
         .selectAll("text")
         .style("text-anchor", "end")
         .attr("dx", ".30em")
+
         // .attr("dy", "-.55em");
         // .attr("transform", "rotate(-90)" );
 
+    // initialize y-axis
     svgBarchart.append("g")
         .attr("class", "y axis")
         .call(yAxis)
@@ -439,7 +445,8 @@ d3.json("scripts/dataset.json", function(error, data) {
                     .style("opacity", .9);
                 tooltipNode.html("Title: " + d.name 
                             + "<br/> Year: " + data[d.name].Year 
-                            + "<br/> Score:  " + data[d.name].Score)
+                            + "<br/> Score:  " + data[d.name].Score
+                            + "<br/> Number of links: " + d.group)
                     .style("left", (d3.event.pageX + 5) + "px")
                     .style("top", (d3.event.pageY - 330 - 28) + "px")
                     .style("background-color", colorNode(d.group) );
