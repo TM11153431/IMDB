@@ -1,0 +1,8 @@
+exclude:
+- /libraries/.*
+component_depth: 1
+languages:
+- javascript
+- perl
+- python
+- script
