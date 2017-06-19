@@ -14,8 +14,11 @@ d3.json("scripts/dataset.json", function(error, data) {
     var titles = []
 
     // initialize dict for genre selection
-
     var genreID = {}
+
+    // initialize timer to make give program time to detect difference between single and double click
+    var timer
+
 
     // organize data for scatter
     for (var key in data) {
@@ -135,11 +138,28 @@ d3.json("scripts/dataset.json", function(error, data) {
                .duration(500)
                .style("opacity", 0);
         })
-                .on("click", function(d){
+        .on("click", function(d){
             updateScatter(d.Title)
             updateNodes(d.Title)
             updateBarchart(d.Title)
-        });
+        })
+
+            .on("click", function(d) {
+                if (timer) clearTimeout(timer);
+                timer = setTimeout(function() {
+                    updateScatter(d.Title)
+                    updateNodes(d.Title)
+                    updateBarchart(d.Title)
+                }, 250)
+            })
+
+            .on("dblclick", function(d) {
+                clearTimeout(timer)
+                url = "http://www.imdb.com/title/tt" + data[d.Title].ID +"/"
+                window.open(url);
+            });
+
+
         // .style("fill", function(d) { return color(d.Wage); });
 
 
@@ -214,11 +234,24 @@ d3.json("scripts/dataset.json", function(error, data) {
         });
 
     node
-        .on("click", function(d){
-            updateScatter(d.name)
-            updateNodes(d.name)
-            updateBarchart(d.name)
+        .on("click", function(d) {
+            if (timer) clearTimeout(timer);
+            timer = setTimeout(function() {
+                updateScatter(d.name)
+                updateNodes(d.name)
+                updateBarchart(d.name)
+            }, 250)
         });
+
+    node
+        .on("dblclick", function(d) {
+            clearTimeout(timer)
+            url = "http://www.imdb.com/title/tt" + data[d.name].ID +"/"
+            window.open(url);
+        })
+
+
+
 
     // node.append("title")
     //     .text(function(d) { return d.name; });
@@ -458,11 +491,21 @@ d3.json("scripts/dataset.json", function(error, data) {
             });
 
         node
-            .on("click", function(d){
-                updateScatter(d.name)
-                updateNodes(d.name)
-                updateBarchart(d.name)
-        });
+            .on("click", function(d) {
+                if (timer) clearTimeout(timer);
+                timer = setTimeout(function() {
+                    updateScatter(d.name)
+                    updateNodes(d.name)
+                    updateBarchart(d.name)
+                }, 250)
+            });
+
+        node
+            .on("dblclick", function(d) {
+                clearTimeout(timer)
+                url = "http://www.imdb.com/title/tt" + data[d.name].ID +"/"
+                window.open(url);
+            })
 
         force.on("tick", function() {
             link.attr("x1", function(d) { return d.source.x; })
