@@ -56,7 +56,7 @@ d3.json("scripts/dataset.json", function(error, data) {
 	// set margins for scatter
 	var margin = {top: 20, right: 20, bottom: 30, left: 40},
 	    width = 600 - margin.left - margin.right,
-	    height = 330 - margin.top - margin.bottom;
+	    height = 430 - margin.top - margin.bottom;
 
 	// set x scale
 	var x = d3.scale.linear()
@@ -125,13 +125,19 @@ d3.json("scripts/dataset.json", function(error, data) {
         .attr("cy", function(d) { return y(d.Score); })
         .style("fill", 'lightblue')
         .on("mouseover", function(d) {
+            var coordinates = [0, 0];
+coordinates = d3.mouse(this);
+var x = coordinates[0];
+var y = coordinates[1];
+
+
             tooltipScatter.transition()
                .duration(200)
                .style("opacity", .9);
             tooltipScatter.html("Title: " + d.Title + "<br/> Year: " + d.Year 
 	        + "<br/> Score:  " + d.Score)
-               .style("left", (d3.event.pageX + 5) + "px")
-               .style("top", (d3.event.pageY - 28) + "px");
+               .style("left", (x + 5) + "px")
+               .style("top", (y + 48) + "px");
         })
         .on("mouseout", function(d) {
             tooltipScatter.transition()
@@ -173,8 +179,8 @@ d3.json("scripts/dataset.json", function(error, data) {
         .style("opacity", 0);
 
 
-    var width = 960,
-        height = 500;
+    var width = 360,
+        height = 300;
 
     var colorNode = d3.scale.ordinal()
         .domain([0,1,2,3,4,5,6,7,8,9,10,11,12])
@@ -215,6 +221,10 @@ d3.json("scripts/dataset.json", function(error, data) {
 
     node
         .on("mouseover", function(d) {
+                        var coordinates = [0, 0];
+coordinates = d3.mouse(this);
+var x = coordinates[0];
+var y = coordinates[1];
             tooltipNode.transition()
                .duration(200)
                .style("opacity", .9);
@@ -223,8 +233,8 @@ d3.json("scripts/dataset.json", function(error, data) {
                             + "<br/> Score:  " + data[d.name].Score
                             + "<br/> Number of links: " + d.group)
                
-               .style("left", (d3.event.pageX + 5) + "px")
-               .style("top", (d3.event.pageY - 330 - 28) + "px")
+               .style("left", (x + 5) + "px")
+               .style("top", (y + 28) + "px")
                .style("background-color", colorNode(d.group) );
         })
         .on("mouseout", function(d) {
@@ -314,7 +324,7 @@ d3.json("scripts/dataset.json", function(error, data) {
 
     var margin = {top: 20, right: 20, bottom: 30, left: 60},
         width = 600 - margin.left - margin.right,
-        height = 330 - margin.top - margin.bottom;
+        height = 230 - margin.top - margin.bottom;
 
     var svgBarchart = d3.select("#graph2")
         .attr("width", width + margin.left + margin.right)
@@ -386,13 +396,17 @@ d3.json("scripts/dataset.json", function(error, data) {
 
     bar
         .on("mouseover", function(d) {
+                        var coordinates = [0, 0];
+coordinates = d3.mouse(this);
+var x = coordinates[0];
+var y = coordinates[1];
             tooltipBarchart.transition()
                 .duration(200)
                 .style("opacity", .9);
             tooltipBarchart.html("Votes: " + d
                 + "<br/> Percentage: " + Math.round(d / totalVotes * 100) + "%")
-               .style("left", (d3.event.pageX + 5 - 630) + "px")
-               .style("top", (d3.event.pageY - 28) + "px");
+               .style("left", (x + 5) + "px")
+               .style("top", (y - 28) + "px");
         })
         .on("mouseout", function(d) {
             tooltipBarchart.transition()
@@ -473,6 +487,10 @@ d3.json("scripts/dataset.json", function(error, data) {
 
         node
             .on("mouseover", function(d) {
+                            var coordinates = [0, 0];
+coordinates = d3.mouse(this);
+var x = coordinates[0];
+var y = coordinates[1];
                 tooltipNode.transition()
                     .duration(200)
                     .style("opacity", .9);
@@ -480,8 +498,8 @@ d3.json("scripts/dataset.json", function(error, data) {
                             + "<br/> Year: " + data[d.name].Year 
                             + "<br/> Score:  " + data[d.name].Score
                             + "<br/> Number of links: " + d.group)
-                    .style("left", (d3.event.pageX + 5) + "px")
-                    .style("top", (d3.event.pageY - 330 - 28) + "px")
+                    .style("left", (x + 5) + "px")
+                    .style("top", (y +28) + "px")
                     .style("background-color", colorNode(d.group) );
             })
             .on("mouseout", function(d) {
