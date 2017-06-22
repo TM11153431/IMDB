@@ -39,7 +39,8 @@ body, html {
   width: 100px;
   height: 60px;
   pointer-events: none;
-  background: lightgrey;
+  background: grey;
+  color: FloralWhite;
   border: 0px;
   border-radius: 8px;
 }
@@ -54,6 +55,15 @@ body, html {
   /*background: red;*/
   border: 0px;
   border-radius: 8px;
+}
+
+.checkbox-inline {
+  color: grey;
+}
+
+#ui-id-1 {
+  max-height:250px;
+  overflow:auto;
 }
 
 

@@ -54,7 +54,7 @@ d3.json("scripts/dataset.json", function(error, data) {
     console.log(data)
 
 	// set margins for scatter
-	var margin = {top: 20, right: 20, bottom: 30, left: 40},
+	var margin = {top: 40, right: 20, bottom: 30, left: 40},
 	    width = 600 - margin.left - margin.right,
 	    height = 430 - margin.top - margin.bottom;
 
@@ -114,6 +114,14 @@ d3.json("scripts/dataset.json", function(error, data) {
         .style("text-anchor", "end")
         .text("Averag IMDB score")
 
+    // add title
+    svgScatter.append("text")
+        .attr("x", width/5)
+        .attr("y", -10)
+        .attr("text-anchor", "start")
+        .style("font-size", "16px")
+        .text("Release year and average score per movie");
+
     // fill graph with dots
     svgScatter.selectAll(".dot")
         .data(scatterData)
@@ -126,10 +134,9 @@ d3.json("scripts/dataset.json", function(error, data) {
         .style("fill", 'lightblue')
         .on("mouseover", function(d) {
             var coordinates = [0, 0];
-coordinates = d3.mouse(this);
-var x = coordinates[0];
-var y = coordinates[1];
-
+            coordinates = d3.mouse(this);
+            var x = coordinates[0];
+            var y = coordinates[1];
 
             tooltipScatter.transition()
                .duration(200)
@@ -144,26 +151,19 @@ var y = coordinates[1];
                .duration(500)
                .style("opacity", 0);
         })
-        .on("click", function(d){
-            updateScatter(d.Title)
-            updateNodes(d.Title)
-            updateBarchart(d.Title)
+        .on("click", function(d) {
+            if (timer) clearTimeout(timer);
+            timer = setTimeout(function() {
+                updateScatter(d.Title)
+                updateNodes(d.Title)
+                updateBarchart(d.Title)
+            }, 250)
         })
-
-            .on("click", function(d) {
-                if (timer) clearTimeout(timer);
-                timer = setTimeout(function() {
-                    updateScatter(d.Title)
-                    updateNodes(d.Title)
-                    updateBarchart(d.Title)
-                }, 250)
-            })
-
-            .on("dblclick", function(d) {
-                clearTimeout(timer)
-                url = "http://www.imdb.com/title/tt" + data[d.Title].ID +"/"
-                window.open(url);
-            });
+        .on("dblclick", function(d) {
+            clearTimeout(timer)
+            url = "http://www.imdb.com/title/tt" + data[d.Title].ID +"/"
+            window.open(url);
+        });
 
 
         // .style("fill", function(d) { return color(d.Wage); });
@@ -180,7 +180,7 @@ var y = coordinates[1];
 
 
     var width = 360,
-        height = 300;
+        height = 350;
 
     var colorNode = d3.scale.ordinal()
         .domain([0,1,2,3,4,5,6,7,8,9,10,11,12])
@@ -196,6 +196,15 @@ var y = coordinates[1];
     var svgNode = d3.select("#graph3")
         .attr("width", width)
         .attr("height", height);
+
+        // add title
+    svgNode.append("text")
+        .attr("x", width/10)
+        .attr("y", 20)
+        .attr("id", "nodeTitle")
+        .attr("text-anchor", "start")
+        .style("font-size", "16px")
+        .text("Related movies for Amelie");
 
     force
         .nodes(graph.nodes)
@@ -221,10 +230,10 @@ var y = coordinates[1];
 
     node
         .on("mouseover", function(d) {
-                        var coordinates = [0, 0];
-coordinates = d3.mouse(this);
-var x = coordinates[0];
-var y = coordinates[1];
+            var coordinates = [0, 0];
+            coordinates = d3.mouse(this);
+            var x = coordinates[0];
+            var y = coordinates[1];
             tooltipNode.transition()
                .duration(200)
                .style("opacity", .9);
@@ -234,8 +243,9 @@ var y = coordinates[1];
                             + "<br/> Number of links: " + d.group)
                
                .style("left", (x + 5) + "px")
-               .style("top", (y + 28) + "px")
-               .style("background-color", colorNode(d.group) );
+               .style("top", (y +130) + "px")
+               .style("background-color", colorNode(d.group) )
+               .style("color", "black");
         })
         .on("mouseout", function(d) {
             tooltipNode.transition()
@@ -259,9 +269,6 @@ var y = coordinates[1];
             url = "http://www.imdb.com/title/tt" + data[d.name].ID +"/"
             window.open(url);
         })
-
-
-
 
     // node.append("title")
     //     .text(function(d) { return d.name; });
@@ -290,15 +297,15 @@ var y = coordinates[1];
 
         temp = []
         for (i = 0; i < values.length; i++) {
-            console.log(values[i].checked)
             if (values[i].checked) {
+                console.log(values[i].value)
                 temp.push((values[i]).value)
             }
         }
-                svgScatter.selectAll("#graph1 .dot").transition()
-                    .duration(2000)
-                    .attr("r", 0)
-                    .style("fill", 'lightblue');        
+        svgScatter.selectAll("#graph1 .dot").transition()
+            .duration(2000)
+            .attr("r", 0)
+            .style("fill", 'lightblue');        
         for (i in temp) {
             for (j in genreID[temp[i]]){
                 movID = genreID[temp[i]][j]
@@ -312,8 +319,8 @@ var y = coordinates[1];
         }
     })
     $("#checkAll").click(function(){
-    $('input:checkbox').not(this).prop('checked', this.checked);
-});
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
 
 
     /***** Barchart part ******/
@@ -322,7 +329,7 @@ var y = coordinates[1];
         .attr("class", "tooltip")
         .style("opacity", 0);
 
-    var margin = {top: 20, right: 20, bottom: 30, left: 60},
+    var margin = {top: 40, right: 40, bottom: 30, left: 70},
         width = 600 - margin.left - margin.right,
         height = 230 - margin.top - margin.bottom;
 
@@ -354,7 +361,7 @@ var y = coordinates[1];
     var totalVotes = 0;
 
     for (i in data['Amelie'].ScoreInfo) {
-      totalVotes += data['Amelie'].ScoreInfo[i];
+        totalVotes += data['Amelie'].ScoreInfo[i];
     }
 
     console.log(totalVotes)
@@ -366,8 +373,14 @@ var y = coordinates[1];
         .call(xAxis)
         .selectAll("text")
         .style("text-anchor", "end")
-        .attr("dx", ".30em")
+        .attr("dx", ".30em");
 
+    svgBarchart.select(".x.axis")
+        .append("text")
+        .attr("x", width)
+        .attr("y", 20)
+        .style("text-anchor", "start")
+        .text("Score");
         // .attr("dy", "-.55em");
         // .attr("transform", "rotate(-90)" );
 
@@ -382,31 +395,38 @@ var y = coordinates[1];
         .style("text-anchor", "end")
         .text("Votes");
 
+    // add title
+    svgBarchart.append("text")
+        .attr("x", width/10)
+        .attr("y", -10)
+        .attr("id", "barTitle")
+        .attr("text-anchor", "start")
+        .style("font-size", "16px")
+        .text("Votes per score for Amelie");
+
     var bar = svgBarchart.selectAll("bar")
         .data(data['Amelie'].ScoreInfo);
     
     bar.enter().append("rect")
-        .style("fill", "steelblue")
+        .style("fill", "lightgrey")
         .attr("x", function(d, i) { return x(10 - i); })
         .attr("width", x.rangeBand())
         .attr("y", function(d, i) { console.log(y(d)); return y(d); })
         .attr("height", function(d, i) { return height - y(d); });
 
-
-
     bar
         .on("mouseover", function(d) {
-                        var coordinates = [0, 0];
-coordinates = d3.mouse(this);
-var x = coordinates[0];
-var y = coordinates[1];
+            var coordinates = [0, 0];
+            coordinates = d3.mouse(this);
+            var x = coordinates[0];
+            var y = coordinates[1];
             tooltipBarchart.transition()
                 .duration(200)
                 .style("opacity", .9);
             tooltipBarchart.html("Votes: " + d
                 + "<br/> Percentage: " + Math.round(d / totalVotes * 100) + "%")
                .style("left", (x + 5) + "px")
-               .style("top", (y - 28) + "px");
+               .style("top", (y- 50) + "px");
         })
         .on("mouseout", function(d) {
             tooltipBarchart.transition()
@@ -420,7 +440,7 @@ var y = coordinates[1];
         totalVotes = 0;
 
         for (i in data[input].ScoreInfo) {
-          totalVotes += data[input].ScoreInfo[i];
+            totalVotes += data[input].ScoreInfo[i];
         }
 
         y.domain([0, d3.max(data[input].ScoreInfo, function(d) { return d; })]);
@@ -432,11 +452,16 @@ var y = coordinates[1];
 
         bar.transition()
             .duration(750)      
-            .style("fill", "steelblue")
+            .style("fill", "lightgrey")
             .attr("x", function(d, i) { return x(10 - i); })
             .attr("width", x.rangeBand())
             .attr("y", function(d, i) { console.log(y(d)); return y(d); })
             .attr("height", function(d, i) { return height - y(d); });
+
+        // add title
+        svgBarchart.select("#barTitle").transition()
+            .duration(750)
+            .text("Votes per score for " + input);
     }
 
     function updateScatter(input) {
@@ -454,7 +479,6 @@ var y = coordinates[1];
 
         history = input
     }
-
 
     function updateNodes(input) {
 
@@ -484,13 +508,18 @@ var y = coordinates[1];
             .style("fill", function(d) { return colorNode(d.group); })
             .call(force.drag);
 
+        svgNode.select("#nodeTitle").transition()
+            .duration(750)
+            .text("Related movies for " + input);
+
+
 
         node
             .on("mouseover", function(d) {
-                            var coordinates = [0, 0];
-coordinates = d3.mouse(this);
-var x = coordinates[0];
-var y = coordinates[1];
+                var coordinates = [0, 0];
+                coordinates = d3.mouse(this);
+                var x = coordinates[0];
+                var y = coordinates[1];
                 tooltipNode.transition()
                     .duration(200)
                     .style("opacity", .9);
@@ -499,8 +528,9 @@ var y = coordinates[1];
                             + "<br/> Score:  " + data[d.name].Score
                             + "<br/> Number of links: " + d.group)
                     .style("left", (x + 5) + "px")
-                    .style("top", (y +28) + "px")
-                    .style("background-color", colorNode(d.group) );
+                    .style("top", (y + 130) + "px")
+                    .style("background-color", colorNode(d.group) )
+                    .style("color", "black");
             })
             .on("mouseout", function(d) {
                 tooltipNode.transition()
