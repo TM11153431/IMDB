@@ -7,8 +7,6 @@ d3.json("scripts/dataset.json", function(error, data) {
     // stores previous search for updating scatter
     var history = ''
 
-    // initialize array for scatter
-    var scatterData = []
       
     // initialize array for searchbox suggestions
     var titles = []
@@ -19,20 +17,7 @@ d3.json("scripts/dataset.json", function(error, data) {
     // initialize timer to make give program time to detect difference between single and double click
     var timer
 
-    // organize data for scatter
-    for (var key in data) {
-        scatterData.push({"Title": key, "Year": data[key].Year, "Score": data[key].Score})
-        titles.push(key)
-        for (i = 0; i < data[key].ScoreInfo.length; i++) {
-            data[key].ScoreInfo[i] = +data[key].ScoreInfo[i];
-        }
-        for (i in data[key].Genres) {
-            if (!(data[key].Genres[i] in genreID)) {
-                genreID[data[key].Genres[i]] = []
-            }
-            genreID[data[key].Genres[i]].push(data[key].ID)
-        }
-    }
+    scatterData = initScatterData()
 
     console.log(scatterData)
 	// add searchbox suggestions
@@ -506,6 +491,27 @@ d3.json("scripts/dataset.json", function(error, data) {
                 url = "http://www.imdb.com/title/tt" + data[d.Title].ID +"/"
                 window.open(url);
             });
+    }
+
+    function initScatterData() {
+        // initialize array for scatter
+        var scatterData = []
+
+        for (var key in data) {
+            scatterData.push({"Title": key, "Year": data[key].Year, "Score": data[key].Score})
+            titles.push(key)
+            for (i = 0; i < data[key].ScoreInfo.length; i++) {
+                data[key].ScoreInfo[i] = +data[key].ScoreInfo[i];
+            }
+            for (i in data[key].Genres) {
+                if (!(data[key].Genres[i] in genreID)) {
+                    genreID[data[key].Genres[i]] = []
+                }
+                genreID[data[key].Genres[i]].push(data[key].ID)
+            }
+        }
+        return scatterData
+
     }
 
 })
