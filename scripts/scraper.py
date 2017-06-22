@@ -14,8 +14,6 @@ jsonfile = open('dataset.json', 'w')
 
 for id in topID:
 
-# url = "http://www.imdb.com/title/tt" + topID[0] +"/"
-
 	url = "http://www.imdb.com/title/tt" + id +"/"
 	r = requests.get(url)
 	url = r.text
@@ -40,19 +38,14 @@ for id in topID:
 	for page in related:
 
 		for relate in page.find_all("img"):
-			# print relate['alt']
 			relations.append(unidecode(relate['alt']))
 
-		# for relate in related[1].find_all("img"):
-		# 	# print relate['alt']
-		# 	relations.append(relate['alt'])
 
 	year = soup.find('span', id="titleYear").find('a').string
 	print relations
 	print id
 
 	url = "http://www.imdb.com/title/tt" + id +"/ratings"
-# url = "http://www.imdb.com/title/tt0109830/ratings"
 	r = requests.get(url)
 	url = r.text
 
@@ -66,14 +59,8 @@ for id in topID:
 		count += 1
 
 	movies[title] = {"ID": id, "Year": year, "Score": score, "Genres": genres, "Related": relations, "ScoreInfo": scores}
-	# movies.append(title: {"Year": year, "Score": score, "Genres": genres, "Related": relations})
 
 
 
 json.dump(movies, jsonfile)
 print movies
-# print topID
-# print year
-# print score
-# print genres
-# print relations

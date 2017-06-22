@@ -40,11 +40,3 @@ for title in movies:
 print movies['Toy Story']['Nodes']
 json.dump(movies, jsonfile)
 
-# 	print related
-# print movies[related]["Related"]
-	# for link in movies[related]["Related"]:
-	# 	print link
-
-# for title in movies:
-# 	for related in movies[title]["Related"]:
-# 		print related

@@ -3,10 +3,8 @@
 import requests
 import re
  
-# top250_url = "http://akas.imdb.com/chart/top"
 top250_url = "http://www.imdb.com/chart/top?ref_=nv_mv_250_6"
 
- 
 def get_top250():
     r = requests.get(top250_url)
     html = r.text.split("\n")
@@ -17,5 +15,4 @@ def get_top250():
         if m:
             _id = m.group(1)
             result.append(_id)
-    #
     return result
