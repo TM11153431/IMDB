@@ -19,7 +19,6 @@ d3.json("scripts/dataset.json", function(error, data) {
     // initialize timer to make give program time to detect difference between single and double click
     var timer
 
-
     // organize data for scatter
     for (var key in data) {
         scatterData.push({"Title": key, "Year": data[key].Year, "Score": data[key].Score})
@@ -35,8 +34,6 @@ d3.json("scripts/dataset.json", function(error, data) {
         }
     }
 
-    console.log(genreID)
-
 	// add searchbox suggestions
     $( function() {
 		titles
@@ -50,8 +47,6 @@ d3.json("scripts/dataset.json", function(error, data) {
         d.Year = +d.Year;
         d.Score = +d.Score;
     });
-
-    console.log(data)
 
 	// set margins for scatter
 	var margin = {top: 40, right: 20, bottom: 30, left: 40},
@@ -112,7 +107,7 @@ d3.json("scripts/dataset.json", function(error, data) {
         .attr("y", 6)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text("Averag IMDB score")
+        .text("Average IMDB score")
 
     // add title
     svgScatter.append("text")
@@ -164,11 +159,6 @@ d3.json("scripts/dataset.json", function(error, data) {
             url = "http://www.imdb.com/title/tt" + data[d.Title].ID +"/"
             window.open(url);
         });
-
-
-        // .style("fill", function(d) { return color(d.Wage); });
-
-
 
     /******** This is the node graph ********/
 
@@ -226,52 +216,7 @@ d3.json("scripts/dataset.json", function(error, data) {
         .style("fill", function(d) { return colorNode(d.group); })
         .call(force.drag);
 
-        console.log(node)
-
-    node
-        .on("mouseover", function(d) {
-            var coordinates = [0, 0];
-            coordinates = d3.mouse(this);
-            var x = coordinates[0];
-            var y = coordinates[1];
-            tooltipNode.transition()
-               .duration(200)
-               .style("opacity", .9);
-            tooltipNode.html("Title: " + d.name 
-                            + "<br/> Year: " + data[d.name].Year 
-                            + "<br/> Score:  " + data[d.name].Score
-                            + "<br/> Number of links: " + d.group)
-               
-               .style("left", (x + 5) + "px")
-               .style("top", (y +130) + "px")
-               .style("background-color", colorNode(d.group) )
-               .style("color", "black");
-        })
-        .on("mouseout", function(d) {
-            tooltipNode.transition()
-               .duration(500)
-               .style("opacity", 0);
-        });
-
-    node
-        .on("click", function(d) {
-            if (timer) clearTimeout(timer);
-            timer = setTimeout(function() {
-                updateScatter(d.name)
-                updateNodes(d.name)
-                updateBarchart(d.name)
-            }, 250)
-        });
-
-    node
-        .on("dblclick", function(d) {
-            clearTimeout(timer)
-            url = "http://www.imdb.com/title/tt" + data[d.name].ID +"/"
-            window.open(url);
-        })
-
-    // node.append("title")
-    //     .text(function(d) { return d.name; });
+    nodeTooltip();
 
     force.on("tick", function() {
         link.attr("x1", function(d) { return d.source.x; })
@@ -293,7 +238,6 @@ d3.json("scripts/dataset.json", function(error, data) {
 
     d3.select('#checkbox').on('change', function() {
         values = document.getElementById("checkbox")
-        // console.log(values.length)
 
         temp = []
         for (i = 0; i < values.length; i++) {
@@ -310,7 +254,6 @@ d3.json("scripts/dataset.json", function(error, data) {
             for (j in genreID[temp[i]]){
                 movID = genreID[temp[i]][j]
 
-                
                 svgScatter.select("#dot_" + movID).transition()
                     .duration(2000)
                     .attr("r", 2.5)
@@ -321,7 +264,6 @@ d3.json("scripts/dataset.json", function(error, data) {
     $("#checkAll").click(function(){
         $('input:checkbox').not(this).prop('checked', this.checked);
     });
-
 
     /***** Barchart part ******/
 
@@ -338,7 +280,6 @@ d3.json("scripts/dataset.json", function(error, data) {
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
 
     var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
 
@@ -364,8 +305,6 @@ d3.json("scripts/dataset.json", function(error, data) {
         totalVotes += data['Amelie'].ScoreInfo[i];
     }
 
-    console.log(totalVotes)
-
     // initialilze x-axis
     svgBarchart.append("g")
         .attr("class", "x axis")
@@ -381,8 +320,6 @@ d3.json("scripts/dataset.json", function(error, data) {
         .attr("y", 20)
         .style("text-anchor", "start")
         .text("Score");
-        // .attr("dy", "-.55em");
-        // .attr("transform", "rotate(-90)" );
 
     // initialize y-axis
     svgBarchart.append("g")
@@ -512,48 +449,7 @@ d3.json("scripts/dataset.json", function(error, data) {
             .duration(750)
             .text("Related movies for " + input);
 
-
-
-        node
-            .on("mouseover", function(d) {
-                var coordinates = [0, 0];
-                coordinates = d3.mouse(this);
-                var x = coordinates[0];
-                var y = coordinates[1];
-                tooltipNode.transition()
-                    .duration(200)
-                    .style("opacity", .9);
-                tooltipNode.html("Title: " + d.name 
-                            + "<br/> Year: " + data[d.name].Year 
-                            + "<br/> Score:  " + data[d.name].Score
-                            + "<br/> Number of links: " + d.group)
-                    .style("left", (x + 5) + "px")
-                    .style("top", (y + 130) + "px")
-                    .style("background-color", colorNode(d.group) )
-                    .style("color", "black");
-            })
-            .on("mouseout", function(d) {
-                tooltipNode.transition()
-                   .duration(500)
-                   .style("opacity", 0);
-            });
-
-        node
-            .on("click", function(d) {
-                if (timer) clearTimeout(timer);
-                timer = setTimeout(function() {
-                    updateScatter(d.name)
-                    updateNodes(d.name)
-                    updateBarchart(d.name)
-                }, 250)
-            });
-
-        node
-            .on("dblclick", function(d) {
-                clearTimeout(timer)
-                url = "http://www.imdb.com/title/tt" + data[d.name].ID +"/"
-                window.open(url);
-            })
+        nodeTooltip();
 
         force.on("tick", function() {
             link.attr("x1", function(d) { return d.source.x; })
@@ -565,5 +461,46 @@ d3.json("scripts/dataset.json", function(error, data) {
                 .attr("cy", function(d) { return d.y; });
         });
     }
+
+    function nodeTooltip() {
+        node
+            .on("mouseover", function(d) {
+                var coordinates = [0, 0];
+                coordinates = d3.mouse(this);
+                var x = coordinates[0];
+                var y = coordinates[1];
+                tooltipNode.transition()
+                   .duration(200)
+                   .style("opacity", .9);
+                tooltipNode.html("Title: " + d.name 
+                                + "<br/> Year: " + data[d.name].Year 
+                                + "<br/> Score:  " + data[d.name].Score
+                                + "<br/> Number of links: " + d.group)
+                   
+                   .style("left", (x + 5) + "px")
+                   .style("top", (y + 130) + "px")
+                   .style("background-color", colorNode(d.group) )
+                   .style("color", "black");
+            })
+            .on("mouseout", function(d) {
+                tooltipNode.transition()
+                   .duration(500)
+                   .style("opacity", 0);
+            })
+            .on("click", function(d) {
+                if (timer) clearTimeout(timer);
+                timer = setTimeout(function() {
+                    updateScatter(d.name)
+                    updateNodes(d.name)
+                    updateBarchart(d.name)
+                }, 250)
+            })
+            .on("dblclick", function(d) {
+                clearTimeout(timer)
+                url = "http://www.imdb.com/title/tt" + data[d.name].ID +"/"
+                window.open(url);
+            })
+    }
+
 })
 
