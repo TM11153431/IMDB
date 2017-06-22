@@ -34,6 +34,7 @@ d3.json("scripts/dataset.json", function(error, data) {
         }
     }
 
+    console.log(scatterData)
 	// add searchbox suggestions
     $( function() {
 		titles
@@ -118,7 +119,7 @@ d3.json("scripts/dataset.json", function(error, data) {
         .text("Release year and average score per movie");
 
     // fill graph with dots
-    svgScatter.selectAll(".dot")
+    var dots = svgScatter.selectAll(".dot")
         .data(scatterData)
         .enter().append("circle")
         .attr("class", "dot")
@@ -126,39 +127,9 @@ d3.json("scripts/dataset.json", function(error, data) {
         .attr("r", 2.5)
         .attr("cx", function(d) { return x(d.Year); })
         .attr("cy", function(d) { return y(d.Score); })
-        .style("fill", 'lightblue')
-        .on("mouseover", function(d) {
-            var coordinates = [0, 0];
-            coordinates = d3.mouse(this);
-            var x = coordinates[0];
-            var y = coordinates[1];
+        .style("fill", 'lightblue');
 
-            tooltipScatter.transition()
-               .duration(200)
-               .style("opacity", .9);
-            tooltipScatter.html("Title: " + d.Title + "<br/> Year: " + d.Year 
-	        + "<br/> Score:  " + d.Score)
-               .style("left", (x + 5) + "px")
-               .style("top", (y + 48) + "px");
-        })
-        .on("mouseout", function(d) {
-            tooltipScatter.transition()
-               .duration(500)
-               .style("opacity", 0);
-        })
-        .on("click", function(d) {
-            if (timer) clearTimeout(timer);
-            timer = setTimeout(function() {
-                updateScatter(d.Title)
-                updateNodes(d.Title)
-                updateBarchart(d.Title)
-            }, 250)
-        })
-        .on("dblclick", function(d) {
-            clearTimeout(timer)
-            url = "http://www.imdb.com/title/tt" + data[d.Title].ID +"/"
-            window.open(url);
-        });
+    scatterTooltip()
 
     /******** This is the node graph ********/
 
@@ -167,7 +138,6 @@ d3.json("scripts/dataset.json", function(error, data) {
     var tooltipNode = d3.select("#tooltip3").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0);
-
 
     var width = 360,
         height = 350;
@@ -187,7 +157,7 @@ d3.json("scripts/dataset.json", function(error, data) {
         .attr("width", width)
         .attr("height", height);
 
-        // add title
+    // add title
     svgNode.append("text")
         .attr("x", width/10)
         .attr("y", 20)
@@ -363,7 +333,7 @@ d3.json("scripts/dataset.json", function(error, data) {
             tooltipBarchart.html("Votes: " + d
                 + "<br/> Percentage: " + Math.round(d / totalVotes * 100) + "%")
                .style("left", (x + 5) + "px")
-               .style("top", (y- 50) + "px");
+               .style("top", (y - 50) + "px");
         })
         .on("mouseout", function(d) {
             tooltipBarchart.transition()
@@ -500,6 +470,42 @@ d3.json("scripts/dataset.json", function(error, data) {
                 url = "http://www.imdb.com/title/tt" + data[d.name].ID +"/"
                 window.open(url);
             })
+    }
+
+    function scatterTooltip() {
+        dots
+            .on("mouseover", function(d) {
+                var coordinates = [0, 0];
+                coordinates = d3.mouse(this);
+                var x = coordinates[0];
+                var y = coordinates[1];
+
+                tooltipScatter.transition()
+                   .duration(200)
+                   .style("opacity", .9);
+                tooltipScatter.html("Title: " + d.Title + "<br/> Year: " + d.Year 
+                + "<br/> Score:  " + d.Score)
+                   .style("left", (x + 5) + "px")
+                   .style("top", (y + 48) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltipScatter.transition()
+                   .duration(500)
+                   .style("opacity", 0);
+            })
+            .on("click", function(d) {
+                if (timer) clearTimeout(timer);
+                timer = setTimeout(function() {
+                    updateScatter(d.Title)
+                    updateNodes(d.Title)
+                    updateBarchart(d.Title)
+                }, 250)
+            })
+            .on("dblclick", function(d) {
+                clearTimeout(timer)
+                url = "http://www.imdb.com/title/tt" + data[d.Title].ID +"/"
+                window.open(url);
+            });
     }
 
 })
