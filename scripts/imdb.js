@@ -7,7 +7,6 @@ d3.json("scripts/dataset.json", function(error, data) {
     // stores previous search for updating scatter
     var history = ''
 
-      
     // initialize array for searchbox suggestions
     var titles = []
 
@@ -50,7 +49,8 @@ d3.json("scripts/dataset.json", function(error, data) {
 	// init x-axis
 	var xAxis = d3.svg.axis()
 	    .scale(x)
-	    .orient("bottom");
+	    .orient("bottom")
+        .tickFormat(d3.format("d"));
 
 	// init y-axis
 	var yAxis = d3.svg.axis()
@@ -116,6 +116,8 @@ d3.json("scripts/dataset.json", function(error, data) {
 
     scatterTooltip()
 
+    updateScatter('Amelie')
+
     /******** This is the node graph ********/
 
     var graph = data["Amelie"].Nodes
@@ -128,8 +130,8 @@ d3.json("scripts/dataset.json", function(error, data) {
         height = 350;
 
     var colorNode = d3.scale.ordinal()
-        .domain([0,1,2,3,4,5,6,7,8,9,10,11,12])
-        .range(['#fff7f3','#fde0dd','#fcc5c0','#fa9fb5','#f768a1','#dd3497','#ae017e','#7a0177','#49006a']),
+        .domain([0,1,2,3,4,5,6,7,8,9,10,11])
+        .range(['#ffd6f8','#ffc2f4','#ffaff1','#ff9bee','#ff88eb','#ff74e8','#ff61e5','#ff4de2','#ff3adf','#ff26dc','#ff13d9','#ff00d6']),
         colorLink = d3.scale.category10();
 
 
@@ -144,12 +146,13 @@ d3.json("scripts/dataset.json", function(error, data) {
 
     // add title
     svgNode.append("text")
-        .attr("x", width/10)
+        .attr("x", width / 2)
         .attr("y", 20)
         .attr("id", "nodeTitle")
-        .attr("text-anchor", "start")
+        .attr("text-anchor", "middle")
         .style("font-size", "16px")
-        .text("Related movies for Amelie");
+        .text("Related movies for Amelie")
+        .call(wrap, 200);
 
     force
         .nodes(graph.nodes)
@@ -294,7 +297,8 @@ d3.json("scripts/dataset.json", function(error, data) {
         .attr("id", "barTitle")
         .attr("text-anchor", "start")
         .style("font-size", "16px")
-        .text("Votes per score for Amelie");
+        .text("Votes per score for Amelie")
+        .call(wrap, 400);
 
     var bar = svgBarchart.selectAll("bar")
         .data(data['Amelie'].ScoreInfo);
@@ -351,9 +355,17 @@ d3.json("scripts/dataset.json", function(error, data) {
             .attr("height", function(d, i) { return height - y(d); });
 
         // add title
-        svgBarchart.select("#barTitle").transition()
-            .duration(750)
-            .text("Votes per score for " + input);
+        svgBarchart.select('#barTitle').remove()
+
+    svgBarchart.append("text")
+        .attr("x", width/10)
+        .attr("y", -10)
+        .attr("id", "barTitle")
+        .attr("text-anchor", "start")
+        .style("font-size", "16px")
+        .text("Votes per score for " + input)
+        .call(wrap, 400);
+        
     }
 
     function updateScatter(input) {
@@ -367,7 +379,8 @@ d3.json("scripts/dataset.json", function(error, data) {
         svgScatter.select("#dot_" + data[input].ID).transition()
             .duration(2000)
             .attr("r", 4.5)
-            .style("fill", 'blue');
+            .style("fill", 'blue')
+            .style("stroke-width", 0);
 
         history = input
     }
@@ -400,9 +413,16 @@ d3.json("scripts/dataset.json", function(error, data) {
             .style("fill", function(d) { return colorNode(d.group); })
             .call(force.drag);
 
-        svgNode.select("#nodeTitle").transition()
-            .duration(750)
-            .text("Related movies for " + input);
+        svgNode.select("#nodeTitle").remove()
+
+    svgNode.append("text")
+        .attr("x", width / 2)
+        .attr("y", 20)
+        .attr("id", "nodeTitle")
+        .attr("text-anchor", "middle")
+        .style("font-size", "16px")
+        .text("Related movies for " + input)
+        .call(wrap, 200);
 
         nodeTooltip();
 
@@ -436,11 +456,18 @@ d3.json("scripts/dataset.json", function(error, data) {
                    .style("top", (y + 130) + "px")
                    .style("background-color", colorNode(d.group) )
                    .style("color", "black");
+                svgScatter.select("#dot_" + data[d.name].ID).transition()
+                    .duration(2000)
+                    .style("stroke", '#c2006f')
+                    .style("stroke-width", 2);
             })
             .on("mouseout", function(d) {
                 tooltipNode.transition()
                    .duration(500)
                    .style("opacity", 0);
+                svgScatter.select("#dot_" + data[d.name].ID).transition()
+                    .duration(2000)
+                    .style("stroke-width", 0);
             })
             .on("click", function(d) {
                 if (timer) clearTimeout(timer);
@@ -449,6 +476,9 @@ d3.json("scripts/dataset.json", function(error, data) {
                     updateNodes(d.name)
                     updateBarchart(d.name)
                 }, 250)
+                tooltipNode.transition()
+                   .duration(500)
+                   .style("opacity", 0);
             })
             .on("dblclick", function(d) {
                 clearTimeout(timer)
@@ -471,7 +501,7 @@ d3.json("scripts/dataset.json", function(error, data) {
                 tooltipScatter.html("Title: " + d.Title + "<br/> Year: " + d.Year 
                 + "<br/> Score:  " + d.Score)
                    .style("left", (x + 5) + "px")
-                   .style("top", (y + 48) + "px");
+                   .style("top", (y + 60) + "px");
             })
             .on("mouseout", function(d) {
                 tooltipScatter.transition()
@@ -514,5 +544,49 @@ d3.json("scripts/dataset.json", function(error, data) {
 
     }
 
+    function wrap (text, width) {
+
+        // code used from https://bl.ocks.org/mbostock/7555321
+
+      text.each(function() {
+
+        var breakChars = ['/', '&', '-'],
+          text = d3.select(this),
+          textContent = text.text(),
+          spanContent;
+
+        breakChars.forEach(char => {
+          // Add a space after each break char for the function to use to determine line breaks
+          textContent = textContent.replace(char, char + ' ');
+        });
+
+        var words = textContent.split(/\s+/).reverse(),
+          word,
+          line = [],
+          lineNumber = 0,
+          lineHeight = 1.1, // ems
+          x = text.attr('x'),
+          y = text.attr('y'),
+          dy = parseFloat(text.attr('dy') || 0),
+          tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
+
+        while (word = words.pop()) {
+          line.push(word);
+          tspan.text(line.join(' '));
+          if (tspan.node().getComputedTextLength() > width) {
+            line.pop();
+            spanContent = line.join(' ');
+            breakChars.forEach(char => {
+              // Remove spaces trailing breakChars that were added above
+              spanContent = spanContent.replace(char + ' ', char);
+            });
+            tspan.text(spanContent);
+            line = [word];
+            tspan = text.append('tspan').attr('x', x).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy + 'em').text(word);
+          }
+        }
+      });
+
+    }
 })
 

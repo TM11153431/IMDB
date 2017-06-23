@@ -10,22 +10,21 @@ body, html {
   .axis path,
 .axis line {
   fill: none;
-  stroke: #000;
+  stroke: grey;
   shape-rendering: crispEdges;
 }
 
-/*.dot {
-  stroke: lightgrey;
-
-
-}*/
+.dot {
+  stroke: pink;
+  stroke-width: 0px;
+}
 
 #tooltip1 .tooltip {
   text-align: left;
   position: absolute;
   padding: 5px;
   width: 300px;
-  height: 60px;
+  height: 80px;
   pointer-events: none;
   background: lightblue;
   border: 0px;
@@ -36,8 +35,8 @@ body, html {
   text-align: left;
   position: absolute;
   padding: 5px;
-  width: 100px;
-  height: 60px;
+  width: 120px;
+  height: 45px;
   pointer-events: none;
   background: grey;
   color: FloralWhite;
