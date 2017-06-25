@@ -16,7 +16,7 @@ d3.json("scripts/dataset.json", function(error, data) {
     // initialize timer to make give program time to detect difference between single and double click
     var timer
 
-    scatterData = initScatterData()
+    scatterData = initScatterData();
 
     console.log(scatterData)
 	// add searchbox suggestions
@@ -93,7 +93,7 @@ d3.json("scripts/dataset.json", function(error, data) {
         .attr("y", 6)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text("Average IMDB score")
+        .text("Average IMDB score");
 
     // add title
     svgScatter.append("text")
@@ -114,9 +114,9 @@ d3.json("scripts/dataset.json", function(error, data) {
         .attr("cy", function(d) { return y(d.Score); })
         .style("fill", 'lightblue');
 
-    scatterTooltip()
+    scatterTooltip();
 
-    updateScatter('Amelie')
+    updateScatter('Amelie');
 
     /******** This is the node graph ********/
 
@@ -127,13 +127,12 @@ d3.json("scripts/dataset.json", function(error, data) {
         .style("opacity", 0);
 
     var width = 360,
-        height = 350;
+        height = 380;
 
     var colorNode = d3.scale.ordinal()
         .domain([0,1,2,3,4,5,6,7,8,9,10,11])
         .range(['#ffd6f8','#ffc2f4','#ffaff1','#ff9bee','#ff88eb','#ff74e8','#ff61e5','#ff4de2','#ff3adf','#ff26dc','#ff13d9','#ff00d6']),
         colorLink = d3.scale.category10();
-
 
     var force = d3.layout.force()
         .charge(-320)
@@ -152,7 +151,7 @@ d3.json("scripts/dataset.json", function(error, data) {
         .attr("text-anchor", "middle")
         .style("font-size", "16px")
         .text("Related movies for Amelie")
-        .call(wrap, 200);
+        .call(wrap, 300);
 
     force
         .nodes(graph.nodes)
@@ -192,7 +191,7 @@ d3.json("scripts/dataset.json", function(error, data) {
         updateScatter(input)
         updateNodes(input)
         updateBarchart(input)
-    })
+    });
 
     d3.select('#checkbox').on('change', function() {
         values = document.getElementById("checkbox")
@@ -243,11 +242,9 @@ d3.json("scripts/dataset.json", function(error, data) {
 
     var y = d3.scale.linear().range([height, 0]);
 
-
     var xAxis = d3.svg.axis()
         .scale(x)
         .orient("bottom");
-        // .tickFormat(d3.time.format("%Y-%m"));
 
     var yAxis = d3.svg.axis()
         .scale(y)
@@ -416,13 +413,13 @@ d3.json("scripts/dataset.json", function(error, data) {
         svgNode.select("#nodeTitle").remove()
 
     svgNode.append("text")
-        .attr("x", width / 2)
+        .attr("x", 180)
         .attr("y", 20)
         .attr("id", "nodeTitle")
         .attr("text-anchor", "middle")
         .style("font-size", "16px")
         .text("Related movies for " + input)
-        .call(wrap, 200);
+        .call(wrap, 300);
 
         nodeTooltip();
 
@@ -541,52 +538,50 @@ d3.json("scripts/dataset.json", function(error, data) {
             }
         }
         return scatterData
-
     }
 
     function wrap (text, width) {
 
         // code used from https://bl.ocks.org/mbostock/7555321
 
-      text.each(function() {
+        text.each(function() {
 
-        var breakChars = ['/', '&', '-'],
-          text = d3.select(this),
-          textContent = text.text(),
-          spanContent;
+            var breakChars = ['/', '&', '-'],
+                text = d3.select(this),
+                textContent = text.text(),
+                spanContent;
 
-        breakChars.forEach(char => {
-          // Add a space after each break char for the function to use to determine line breaks
-          textContent = textContent.replace(char, char + ' ');
-        });
-
-        var words = textContent.split(/\s+/).reverse(),
-          word,
-          line = [],
-          lineNumber = 0,
-          lineHeight = 1.1, // ems
-          x = text.attr('x'),
-          y = text.attr('y'),
-          dy = parseFloat(text.attr('dy') || 0),
-          tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
-
-        while (word = words.pop()) {
-          line.push(word);
-          tspan.text(line.join(' '));
-          if (tspan.node().getComputedTextLength() > width) {
-            line.pop();
-            spanContent = line.join(' ');
             breakChars.forEach(char => {
-              // Remove spaces trailing breakChars that were added above
-              spanContent = spanContent.replace(char + ' ', char);
+                // Add a space after each break char for the function to use to determine line breaks
+                textContent = textContent.replace(char, char + ' ');
             });
-            tspan.text(spanContent);
-            line = [word];
-            tspan = text.append('tspan').attr('x', x).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy + 'em').text(word);
-          }
-        }
-      });
 
+            var words = textContent.split(/\s+/).reverse(),
+                word,
+                line = [],
+                lineNumber = 0,
+                lineHeight = 1.1, // ems
+                x = text.attr('x'),
+                y = text.attr('y'),
+                dy = parseFloat(text.attr('dy') || 0),
+                tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
+
+            while (word = words.pop()) {
+                line.push(word);
+                tspan.text(line.join(' '));
+                if (tspan.node().getComputedTextLength() > width) {
+                    line.pop();
+                    spanContent = line.join(' ');
+                    breakChars.forEach(char => {
+                        // Remove spaces trailing breakChars that were added above
+                        spanContent = spanContent.replace(char + ' ', char);
+                    });
+                    tspan.text(spanContent);
+                    line = [word];
+                    tspan = text.append('tspan').attr('x', x).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy + 'em').text(word);
+                }
+            }
+        });
     }
 })
 
