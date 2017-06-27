@@ -7,7 +7,7 @@ sys.setdefaultencoding('utf8')
 
 topID = functions.get_top250()
 movies = {}
-jsonfile = open('dataset.json', 'w')
+jsonfile = open('../data/dataset.json', 'w')
 
 for id in topID:
 

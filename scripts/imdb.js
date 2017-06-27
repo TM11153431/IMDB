@@ -1,4 +1,4 @@
-d3.json("scripts/dataset.json", function(error, data) {
+d3.json("../data/dataset.json", function(error, data) {
 
     /******* This is the scatter plot ******/
 
@@ -71,37 +71,39 @@ d3.json("scripts/dataset.json", function(error, data) {
     x.domain(d3.extent(scatterData, function(d) { return d.Year; })).nice();
     y.domain(d3.extent(scatterData, function(d) { return d.Score; })).nice();
 
-    // set x axis
-    svgScatter.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis)
-        .append("text")
-        .attr("class", "label")
-        .attr("x", width)
-        .attr("y", -6)
-        .style("text-anchor", "end")
-        .text("Year");
+    scatter(svgScatter, width, height, xAxis, yAxis);
 
-    // set y-axis
-    svgScatter.append("g")
-        .attr("class", "y axis")
-        .call(yAxis)
-        .append("text")
-        .attr("class", "label")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("Average IMDB score");
+    // // set x axis
+    // svgScatter.append("g")
+    //     .attr("class", "x axis")
+    //     .attr("transform", "translate(0," + height + ")")
+    //     .call(xAxis)
+    //     .append("text")
+    //     .attr("class", "label")
+    //     .attr("x", width)
+    //     .attr("y", -6)
+    //     .style("text-anchor", "end")
+    //     .text("Year");
 
-    // add title
-    svgScatter.append("text")
-        .attr("x", width/5)
-        .attr("y", -10)
-        .attr("text-anchor", "start")
-        .style("font-size", "16px")
-        .text("Release year and average score per movie");
+    // // set y-axis
+    // svgScatter.append("g")
+    //     .attr("class", "y axis")
+    //     .call(yAxis)
+    //     .append("text")
+    //     .attr("class", "label")
+    //     .attr("transform", "rotate(-90)")
+    //     .attr("y", 6)
+    //     .attr("dy", ".71em")
+    //     .style("text-anchor", "end")
+    //     .text("Average IMDB score");
+
+    // // add title
+    // svgScatter.append("text")
+    //     .attr("x", width/5)
+    //     .attr("y", -10)
+    //     .attr("text-anchor", "start")
+    //     .style("font-size", "16px")
+    //     .text("Release year and average score per movie");
 
     // fill graph with dots
     var dots = svgScatter.selectAll(".dot")
@@ -114,9 +116,11 @@ d3.json("scripts/dataset.json", function(error, data) {
         .attr("cy", function(d) { return y(d.Score); })
         .style("fill", 'lightblue');
 
-    scatterTooltip();
-
     updateScatter('Amelie');
+
+    scatterTooltip(dots, timer, tooltipScatter);
+
+    
 
     /******** This is the node graph ********/
 
@@ -329,6 +333,40 @@ d3.json("scripts/dataset.json", function(error, data) {
 
     /***** functions ******/ 
 
+    // function scatter(svgScatter) {
+    //        // set x axis
+    // svgScatter.append("g")
+    //     .attr("class", "x axis")
+    //     .attr("transform", "translate(0," + height + ")")
+    //     .call(xAxis)
+    //     .append("text")
+    //     .attr("class", "label")
+    //     .attr("x", width)
+    //     .attr("y", -6)
+    //     .style("text-anchor", "end")
+    //     .text("Year");
+
+    // // set y-axis
+    // svgScatter.append("g")
+    //     .attr("class", "y axis")
+    //     .call(yAxis)
+    //     .append("text")
+    //     .attr("class", "label")
+    //     .attr("transform", "rotate(-90)")
+    //     .attr("y", 6)
+    //     .attr("dy", ".71em")
+    //     .style("text-anchor", "end")
+    //     .text("Average IMDB score");
+
+    // // add title
+    // svgScatter.append("text")
+    //     .attr("x", width/5)
+    //     .attr("y", -10)
+    //     .attr("text-anchor", "start")
+    //     .style("font-size", "16px")
+    //     .text("Release year and average score per movie");
+    // }
+
     function updateBarchart(input) {
         totalVotes = 0;
 
@@ -354,14 +392,14 @@ d3.json("scripts/dataset.json", function(error, data) {
         // add title
         svgBarchart.select('#barTitle').remove()
 
-    svgBarchart.append("text")
-        .attr("x", width/10)
-        .attr("y", -10)
-        .attr("id", "barTitle")
-        .attr("text-anchor", "start")
-        .style("font-size", "16px")
-        .text("Votes per score for " + input)
-        .call(wrap, 400);
+        svgBarchart.append("text")
+            .attr("x", width/10)
+            .attr("y", -10)
+            .attr("id", "barTitle")
+            .attr("text-anchor", "start")
+            .style("font-size", "16px")
+            .text("Votes per score for " + input)
+            .call(wrap, 400);
         
     }
 
@@ -412,16 +450,16 @@ d3.json("scripts/dataset.json", function(error, data) {
 
         svgNode.select("#nodeTitle").remove()
 
-    svgNode.append("text")
-        .attr("x", 180)
-        .attr("y", 20)
-        .attr("id", "nodeTitle")
-        .attr("text-anchor", "middle")
-        .style("font-size", "16px")
-        .text("Related movies for " + input)
-        .call(wrap, 300);
+        svgNode.append("text")
+            .attr("x", 180)
+            .attr("y", 20)
+            .attr("id", "nodeTitle")
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .text("Related movies for " + input)
+            .call(wrap, 300);
 
-        nodeTooltip();
+            nodeTooltip();
 
         force.on("tick", function() {
             link.attr("x1", function(d) { return d.source.x; })
@@ -484,7 +522,7 @@ d3.json("scripts/dataset.json", function(error, data) {
             })
     }
 
-    function scatterTooltip() {
+    function scatterTooltip(dots, timer, tooltipScatter) {
         dots
             .on("mouseover", function(d) {
                 var coordinates = [0, 0];
