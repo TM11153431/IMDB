@@ -8,15 +8,17 @@ d3.json("../data/dataset.json", function(error, data) {
     var history = ''
 
     // initialize array for searchbox suggestions
-    var titles = []
+    // var titles = []
 
     // initialize dict for genre selection
-    var genreID = {}
+    // var genreID = {}
 
     // initialize timer to make give program time to detect difference between single and double click
     var timer
 
-    scatterData = initScatterData();
+    scatterData = initScatterData(data)[0];
+
+    titles = initScatterData(data)[1];
 
     console.log(scatterData)
 	// add searchbox suggestions
@@ -118,7 +120,7 @@ d3.json("../data/dataset.json", function(error, data) {
 
     updateScatter('Amelie');
 
-    scatterTooltip(dots, timer, tooltipScatter);
+    scatterTooltip();
 
     
 
@@ -177,7 +179,7 @@ d3.json("../data/dataset.json", function(error, data) {
         .style("fill", function(d) { return colorNode(d.group); })
         .call(force.drag);
 
-    nodeTooltip();
+    nodeTooltip(node, tooltipNode, data, svgScatter, colorNode);
 
     force.on("tick", function() {
         link.attr("x1", function(d) { return d.source.x; })
@@ -404,6 +406,8 @@ d3.json("../data/dataset.json", function(error, data) {
     }
 
     function updateScatter(input) {
+        console.log(svgScatter)
+
         if (history != '') {
             svgScatter.select("#dot_" + data[history].ID).transition()
                 .duration(2000)
@@ -522,7 +526,7 @@ d3.json("../data/dataset.json", function(error, data) {
             })
     }
 
-    function scatterTooltip(dots, timer, tooltipScatter) {
+    function scatterTooltip() {
         dots
             .on("mouseover", function(d) {
                 var coordinates = [0, 0];
@@ -558,25 +562,25 @@ d3.json("../data/dataset.json", function(error, data) {
             });
     }
 
-    function initScatterData() {
-        // initialize array for scatter
-        var scatterData = []
+    // function initScatterData(scatterData, titles) {
+    //     // initialize array for scatter
+    //     var scatterData = []
 
-        for (var key in data) {
-            scatterData.push({"Title": key, "Year": data[key].Year, "Score": data[key].Score})
-            titles.push(key)
-            for (i = 0; i < data[key].ScoreInfo.length; i++) {
-                data[key].ScoreInfo[i] = +data[key].ScoreInfo[i];
-            }
-            for (i in data[key].Genres) {
-                if (!(data[key].Genres[i] in genreID)) {
-                    genreID[data[key].Genres[i]] = []
-                }
-                genreID[data[key].Genres[i]].push(data[key].ID)
-            }
-        }
-        return scatterData
-    }
+    //     for (var key in data) {
+    //         scatterData.push({"Title": key, "Year": data[key].Year, "Score": data[key].Score})
+    //         titles.push(key)
+    //         for (i = 0; i < data[key].ScoreInfo.length; i++) {
+    //             data[key].ScoreInfo[i] = +data[key].ScoreInfo[i];
+    //         }
+    //         for (i in data[key].Genres) {
+    //             if (!(data[key].Genres[i] in genreID)) {
+    //                 genreID[data[key].Genres[i]] = []
+    //             }
+    //             genreID[data[key].Genres[i]].push(data[key].ID)
+    //         }
+    //     }
+    //     return scatterData, titles
+    // }
 
     function wrap (text, width) {
 
