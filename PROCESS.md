@@ -59,4 +59,12 @@ Changed python script and javascript and folder structure to change location of 
 # day 17
 Changed javscript functions. At first I tried to add all scatter related functions into one scatterdata.js file, but this is very hard. It is that hardbecause of the update functions, since when you update the scatter you also call the update functions for the node graph and for the barchart. Those functions also need their own special input arguments, so you also have to include those input arguments in the update function for the scatter and you have to include them in my imdb.js file. This was very quick getting hard and getting a mess, so I limited to just include the functions without the update functions in the scatterdata.js file. This is changed. I have to try if it's possible to arrange my update functions the same way.
 
+# day 18
+Today was the last day. I changed most of the code into functions. Every function that is specific for his own graph is put together in a file named to that graph. So for example all scatter functions are put toegether in scatterdata.js. This took most of the work for today, since it resulted in some new bugs. I chose to skip tracking my history. The history was used to know which dot to change to normal if a new movie needed to be highlighted. Instead I wrote code that selected the highlighted dot and just changed it back to normal color and size. There were several other bugs, which are all resolved now. Hence the code is better readable, the only minor thing is that some functions need a lot of input arguments. But that is not a big issue, since the code is way more readable now.
+After that I added comments, minor changes in indentation and some other minor code improvements. I also changed the structure of folders.
+At last I updated my readme and I wrote my final report. Really realized my progression of last month. At last I needed to resolve a bug in github pages, apparently I had to change the json path, whilst it did work on my localhost.
+
+# day 19
+Final version already committed, so no work to do. It had to be committed at day 18.
+
 [![BCH compliance](https://bettercodehub.com/edge/badge/nathanbijleveld/IMDB?branch=master)](https://bettercodehub.com/)
