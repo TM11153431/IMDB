@@ -3,6 +3,7 @@
 ## Short description
 Deze applicatie geeft een overzicht van de Top 250 Movies van IMDB. De gebruiker krijgt een overzicht van het releasejaar van de film ten opzichte van de score.
 Vervolgens kan de gebruiker zijn film selecteren en wordt hij voorzien van extra informatie. Alle grafieken zijn veronden, waardoor je snel nieuwe en overzichtelijke info kan krijgen.
+![](IMDB/doc/Schermafbeelding 2017-06-29 om 22.23.53.png)
 
 ## Technical design
 Alle code die gebruikt is, is duidelijk opgedeeld in mappen. De CSS code, staat in de desbetreffende map. De scraper die gebruikt is staat in de Python map en de visualisatiescripts staan in de Javascript map.
