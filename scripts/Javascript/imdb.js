@@ -1,25 +1,27 @@
-d3.json("../../IMDB/data/dataset.json", function(error, data) {
+/***
+* Nathan Bijleveld
+*
+* 10590943
+*
+* imdb.js
+***/
+
+d3.json("../../data/dataset.json", function(error, data) {
 
     /******* This is the scatter plot ******/
 
     if (error) throw error;
 
-    var input = 'Amelie'
-
-    // stores previous search for updating scatter
-
-
+    // set default input value
+    var input = 'Amelie';
 
     // initialize timer to make give program time to detect difference between single and double click
-    var timer
+    var timer;
 
     scatterData = initScatterData(data)[0];
-
     titles = initScatterData(data)[1];
-
     genreID = initScatterData(data)[2];
 
-    console.log(data)
 	// add searchbox suggestions
     $( function() {
 		titles
@@ -28,30 +30,22 @@ d3.json("../../IMDB/data/dataset.json", function(error, data) {
         });
     });
 
-
-
-
+    // initialize tooltip element for scatter
 	var tooltipScatter = d3.select("#tooltip1").append("div")
       .attr("class", "tooltip")
       .style("opacity", 0);
 
-   
+    // store dots from scatter
+    dots = scatter(scatterData, data);
+
+    // update function used to init the scatter for first time
+    updateScatter(input, data);    
 
 
-    dots = scatter(scatterData, data)
+    // set data for node graph
+    var graph = data[input].Nodes;
 
-   
-
-    updateScatter(input, data);
-
-
-
-    
-
-    /******** This is the node graph ********/
-
-    var graph = data[input].Nodes
-
+    // initialize tooltip element for node graph
     var tooltipNode = d3.select("#tooltip3").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0);
@@ -59,16 +53,19 @@ d3.json("../../IMDB/data/dataset.json", function(error, data) {
     var width = 360,
         height = 380;
 
+    // colors for nodes and links
     var colorNode = d3.scale.ordinal()
         .domain([0,1,2,3,4,5,6,7,8,9,10,11])
         .range(['#ffd6f8','#ffc2f4','#ffaff1','#ff9bee','#ff88eb','#ff74e8','#ff61e5','#ff4de2','#ff3adf','#ff26dc','#ff13d9','#ff00d6']),
         colorLink = d3.scale.category10();
 
+    // init force to make graph
     var force = d3.layout.force()
         .charge(-320)
         .linkDistance(100)
         .size([width, height]);
 
+    // select svg element
     var svgNode = d3.select("#graph3")
         .attr("width", width)
         .attr("height", height);
@@ -83,46 +80,47 @@ d3.json("../../IMDB/data/dataset.json", function(error, data) {
         .text("Related movies for Amelie")
         .call(wrap, 300);
 
-    var node, link
+    var node, link;
 
-    console.log(node)
+    // use updateNodes to init nodegraph first time
+    result = updateNodes(input, force, svgNode, data, colorLink, colorNode, tooltipNode, timer);
 
-    console.log(data)
+    // store updated value of node graph
+    node = result[0];
+    link = result[1];
+    input = result[2];
 
-    result = updateNodes(input, force, svgNode, data, colorLink, colorNode, tooltipNode, timer, node, link)
-
-    node = result[0]
-    link = result[1]
-    input = result[2]
-
-
-    console.log(result)
-
-
+    // code for selecting on genre
     d3.select('#checkbox').on('change', function() {
-        values = document.getElementById("checkbox")
+        // select checked values
+        values = document.getElementById("checkbox");
         
-        curMov = d3.selectAll("#graph1 .dot[r='4.5']")[0][0]
-        console.log(curMov)
+        // select ID of current highlighted dot
+        curMov = d3.selectAll("#graph1 .dot[r='4.5']")[0][0];
         if (typeof curMov != 'undefined'){
-            curMovID = curMov.id.slice(4)
-            console.log(curMovID)
+            curMovID = curMov.id.slice(4);
         }
 
-        temp = []
+        // init array with all checked values
+        checkedGenres = [];
         for (i = 0; i < values.length; i++) {
             if (values[i].checked) {
-                console.log(values[i].value)
-                temp.push((values[i]).value)
+                checkedGenres.push((values[i]).value);
             }
         }
+        
+        // first hide all dots
         d3.selectAll("#graph1 .dot").transition()
             .duration(2000)
             .attr("r", 0)
             .style("fill", 'lightblue');        
-        for (i in temp) {
-            for (j in genreID[temp[i]]){
-                movID = genreID[temp[i]][j]
+        
+        // then show dots with corresponding genre
+        for (i in checkedGenres) {
+            for (j in genreID[checkedGenres[i]]){
+                movID = genreID[checkedGenres[i]][j];
+                
+                // show highlighted dot as highlighted if genre corresponds
                 if (movID == curMovID){
                     d3.select("#dot_" + movID).transition()
                         .duration(2000)
@@ -138,57 +136,31 @@ d3.json("../../IMDB/data/dataset.json", function(error, data) {
             }
         }
     })
+    
+    // (un)select all checkbox
     $("#checkAll").click(function(){
         $('input:checkbox').not(this).prop('checked', this.checked);
     });
 
-    
+    // init barchart
+    [bar, tooltipBarchart, totalVotes, x, y, barWidth, barHeight, yAxis, svgBarchart] = barchart(data, input);
 
-    /***** Barchart part ******/
- 
-    [bar, tooltipBarchart, totalVotes, x, y, barWidth, barHeight, yAxis, svgBarchart] = barchart(data, input)
+    // init tooltip for barchart
+    barchartTooltip(bar, tooltipBarchart, totalVotes);
 
-    bar
-        .on("mouseover", function(d) {
-            var coordinates = [0, 0];
-            coordinates = d3.mouse(this);
-            var x = coordinates[0];
-            var y = coordinates[1];
-            tooltipBarchart.transition()
-                .duration(200)
-                .style("opacity", .9);
-            tooltipBarchart.html("Votes: " + d
-                + "<br/> Percentage: " + Math.round(d / totalVotes * 100) + "%")
-               .style("left", (x + 5) + "px")
-               .style("top", (y - 50) + "px");
-        })
-        .on("mouseout", function(d) {
-            tooltipBarchart.transition()
-               .duration(500)
-               .style("opacity", 0);
-        });
+    // init tooltip for scatter
+    scatterTooltip(input, force, svgNode, data, colorLink, colorNode, tooltipNode, timer, node, link, barHeight, barWidth, tooltipScatter, dots);
 
-        console.log(dots)
-    scatterTooltip(input, force, svgNode, data, colorLink, colorNode, tooltipNode, timer, node, link, barHeight, barWidth, tooltipScatter, dots)
-
-
-
-    /***** functions ******/ 
-
-
-        d3.select('#searchButton').on('click', function() {
+    // update graphs to searched movie
+    d3.select('#searchButton').on('click', function() {
         input = document.getElementById("searchbox").value
 
-        updateScatter(input, data)
-        result = updateNodes(input, force, svgNode, data, colorLink, colorNode, tooltipNode, timer, node, link)
-        updateBarchart(input, data, barHeight, barWidth)
-        node = result[0]
-        link = result[1]
-        input = result[2]
-    });
-
-    
-
-    
+        updateScatter(input, data);
+        result = updateNodes(input, force, svgNode, data, colorLink, colorNode, tooltipNode, timer, node, link);
+        updateBarchart(input, data, barHeight, barWidth);
+        node = result[0];
+        link = result[1];
+        input = result[2];
+    });    
 })
 

@@ -1,9 +1,19 @@
+/***
+* Nathan Bijleveld
+*
+* 10590943
+*
+* barchartdata.js
+***/
+
 function barchart(data, input) {    
 
+    // init are for tooltip for barchart
     var tooltipBarchart = d3.select("#tooltip2").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0);
 
+    // select and set graph space
     var margin = {top: 40, right: 40, bottom: 30, left: 70},
         width = 600 - margin.left - margin.right,
         height = 230 - margin.top - margin.bottom;
@@ -14,14 +24,12 @@ function barchart(data, input) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    console.log(svgBarchart)
-
+    
+    // set x and y scale
     var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
-
     var y = d3.scale.linear().range([height, 0]);
 
-    console.log(y)
-
+    // init both axes
     var xAxis = d3.svg.axis()
         .scale(x)
         .orient("bottom");
@@ -31,11 +39,14 @@ function barchart(data, input) {
         .orient("left")
         .ticks(10);
 
+    // define x and y domain
     x.domain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
     y.domain([0, d3.max(data[input].ScoreInfo, function(d) { return d; })]);
 
+    // init counter for total votes
     var totalVotes = 0;
 
+    // count total votes
     for (i in data[input].ScoreInfo) {
         totalVotes += data[input].ScoreInfo[i];
     }
@@ -49,6 +60,7 @@ function barchart(data, input) {
         .style("text-anchor", "end")
         .attr("dx", ".30em");
 
+    // x-axis label
     svgBarchart.select(".x.axis")
         .append("text")
         .attr("x", width)
@@ -77,6 +89,7 @@ function barchart(data, input) {
         .text("Votes per score for Amelie")
         .call(wrap, 400);
 
+    // apped bars
     var bar = svgBarchart.selectAll("bar")
         .data(data[input].ScoreInfo);
     
@@ -87,26 +100,26 @@ function barchart(data, input) {
         .attr("y", function(d, i) { console.log(y(d)); return y(d); })
         .attr("height", function(d, i) { return height - y(d); });
 
+    // return essential information
     return [bar, tooltipBarchart, totalVotes, x, y, width, height, yAxis, svgBarchart]
-
-
 }
 
-    function updateBarchart(input, data, height, width) {
+function updateBarchart(input, data, height, width) {
+    // select the barchart
     svgBarchart = d3.select("#graph2 g")
 
+    // update total votes
     totalVotes = 0;
 
     for (i in data[input].ScoreInfo) {
         totalVotes += data[input].ScoreInfo[i];
     }
 
-    console.log(data[input])
-
+    // update y axis(x axis doesn't change)
     y.domain([0, d3.max(data[input].ScoreInfo, function(d) { return d; })]);
     svgBarchart.select(".y.axis").transition().duration(300).call(yAxis);
 
-
+    // update bars
     var bar = svgBarchart.selectAll("rect")
         .data(data[input].ScoreInfo);
 
@@ -118,10 +131,8 @@ function barchart(data, input) {
         .attr("y", function(d, i) { console.log(y(d)); return y(d); })
         .attr("height", function(d, i) { return height - y(d); });
 
-    // add title
-    svgBarchart.select('#barTitle').remove()
-
-    console.log(svgBarchart)
+    // udate title for current movie
+    svgBarchart.select('#barTitle').remove();
 
     svgBarchart.append("text")
         .attr("x", width/10)
@@ -133,6 +144,29 @@ function barchart(data, input) {
         .call(wrap, 400);
     
     }
+
+function barchartTooltip(bar, tooltipBarchart, totalVotes) {
+    // initialize tooltip for barchart
+    bar
+        .on("mouseover", function(d) {
+            var coordinates = [0, 0];
+            coordinates = d3.mouse(this);
+            var x = coordinates[0];
+            var y = coordinates[1];
+            tooltipBarchart.transition()
+                .duration(200)
+                .style("opacity", .9);
+            tooltipBarchart.html("Votes: " + d
+                + "<br/> Percentage: " + Math.round(d / totalVotes * 100) + "%")
+               .style("left", (x + 5) + "px")
+               .style("top", (y - 50) + "px");
+        })
+        .on("mouseout", function(d) {
+            tooltipBarchart.transition()
+               .duration(500)
+               .style("opacity", 0);
+        });
+}
 
 
 

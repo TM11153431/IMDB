@@ -1,8 +1,15 @@
+# Nathan Bijleveld
+#
+# 10590943
+#
+# functions.py
+
 from bs4 import BeautifulSoup
 import requests
 from unidecode import unidecode
 import re
 
+# scrape most general informatie
 def getInfo(id):
 	url = "http://www.imdb.com/title/tt" + id +"/"
 	r = requests.get(url)
@@ -16,6 +23,7 @@ def getInfo(id):
 	score = soup.find("span", itemprop="ratingValue").string
 	genres = soup.find_all("span", itemprop="genre")
 
+	# decode all characters to ascii
 	for i in range(len(genres)):
 		genres[i] = unidecode(genres[i].string).rstrip()
 		print genres[i]
@@ -34,6 +42,7 @@ def getInfo(id):
 
 	return {"ID": id, "Year": year, "Score": score, "Genres": genres, "Related": relations}, title
 
+# srape the scores
 def getScores(id):
 	url = "http://www.imdb.com/title/tt" + id +"/ratings"
 	r = requests.get(url)
@@ -50,6 +59,7 @@ def getScores(id):
 
 	return {"ScoreInfo": scores}
 
+# format data for relationship graph
 def getNodes(movies):
 	for title in movies:
 		nodes = []
@@ -83,6 +93,7 @@ def getNodes(movies):
 		movies[title]["Nodes"] = { "nodes": nodes, "links": links}
 	return movies
 
+# scrapes all movie ID's
 def get_top250():
 	top250_url = "http://www.imdb.com/chart/top?ref_=nv_mv_250_6"
 	r = requests.get(top250_url)

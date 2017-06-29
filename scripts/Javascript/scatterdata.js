@@ -1,11 +1,18 @@
+/***
+* Nathan Bijleveld
+*
+* 10590943
+*
+* scatterdata.js
+***/
+
 function initScatterData(data) {
     // initialize array for scatter
     var scatterData = [],
         titles = [],
         genreID = {}
 
-    console.log(data)
-
+    // format the data to correct format
     for (var key in data) {
         scatterData.push({"Title": key, "Year": data[key].Year, "Score": data[key].Score})
         titles.push(key)
@@ -26,7 +33,6 @@ function initScatterData(data) {
         d.Score = +d.Score;
     });
 
-    console.log(scatterData)
     return [scatterData, titles, genreID]
 }
 
@@ -65,7 +71,6 @@ function scatter(scatterData, data) {
     x.domain(d3.extent(scatterData, function(d) { return d.Year; })).nice();
     y.domain(d3.extent(scatterData, function(d) { return d.Score; })).nice();
 
-
     // set x axis
     svgScatter.append("g")
         .attr("class", "x axis")
@@ -98,7 +103,6 @@ function scatter(scatterData, data) {
         .style("font-size", "16px")
         .text("Release year and average score per movie");
 
-    console.log(data)
     // fill graph with dots
     var dots = svgScatter.selectAll(".dot")
         .data(scatterData)
@@ -111,64 +115,67 @@ function scatter(scatterData, data) {
         .style("fill", 'lightblue');
 
     return dots
-    }
+}
 
-    function updateScatter(input, data) {
+function updateScatter(input, data) {
 
+        // change old movie back to normal dot
         d3.selectAll("#graph1 .dot[r='4.5']").transition()
             .duration(2000)
             .attr("r", 2.5)
             .style("fill", 'lightblue');
 
+        // update new movie to highlighted dot
         d3.select("#dot_" + data[input].ID).transition()
             .duration(2000)
             .attr("r", 4.5)
             .style("fill", 'blue')
             .style("stroke-width", 0);
 
-        console.log(d3.select("#graph1 .dot [r='4.5']"))
+}
 
-    }
+function scatterTooltip(input, force, svgNode, data, colorLink, colorNode, tooltipNode, timer, node, link, barHeight, barWidth, tooltipScatter, dots) {
+    // show info on dots
+    dots
+        .on("mouseover", function(d) {
+            var coordinates = [0, 0];
+            coordinates = d3.mouse(this);
+            var x = coordinates[0];
+            var y = coordinates[1];
 
-      function scatterTooltip(input, force, svgNode, data, colorLink, colorNode, tooltipNode, timer, node, link, barHeight, barWidth, tooltipScatter, dots) {
-        console.log(dots)
-        dots
-            .on("mouseover", function(d) {
-                var coordinates = [0, 0];
-                coordinates = d3.mouse(this);
-                var x = coordinates[0];
-                var y = coordinates[1];
-
-                tooltipScatter.transition()
-                   .duration(200)
-                   .style("opacity", .9);
-                tooltipScatter.html("Title: " + d.Title + "<br/> Year: " + d.Year 
-                + "<br/> Score:  " + d.Score)
-                   .style("left", (x + 5) + "px")
-                   .style("top", (y + 60) + "px");
-            })
-            .on("mouseout", function(d) {
-                tooltipScatter.transition()
-                   .duration(500)
-                   .style("opacity", 0);
-            })
-            .on("click", function(d) {
-                if (timer) clearTimeout(timer);
-                timer = setTimeout(function() {
-                    input = d.Title
-                    updateScatter(input, data)
-                    result = updateNodes(input, force, svgNode, data, colorLink, colorNode, tooltipNode, timer, node, link)
-                    updateBarchart(input, data, barHeight, barWidth)
-                    node = result[0]
-                    link = result[1]
-                    input = result[2]
-                }, 250)
-            })
-            .on("dblclick", function(d) {
-                clearTimeout(timer)
-                url = "http://www.imdb.com/title/tt" + data[d.Title].ID +"/"
-                window.open(url);
-            });
-
-    }
+            tooltipScatter.transition()
+               .duration(200)
+               .style("opacity", .9);
+            tooltipScatter.html("Title: " + d.Title + "<br/> Year: " + d.Year 
+            + "<br/> Score:  " + d.Score)
+               .style("left", (x + 5) + "px")
+               .style("top", (y + 60) + "px");
+        })
+        .on("mouseout", function(d) {
+            tooltipScatter.transition()
+               .duration(500)
+               .style("opacity", 0);
+        })
+        
+        // update functions on click
+        .on("click", function(d) {
+            if (timer) clearTimeout(timer);
+            timer = setTimeout(function() {
+                input = d.Title;
+                updateScatter(input, data);
+                result = updateNodes(input, force, svgNode, data, colorLink, colorNode, tooltipNode, timer);
+                updateBarchart(input, data, barHeight, barWidth);
+                node = result[0];
+                link = result[1];
+                input = result[2];
+            }, 250)
+        })
+        
+        // go to imdb site on double click
+        .on("dblclick", function(d) {
+            clearTimeout(timer)
+            url = "http://www.imdb.com/title/tt" + data[d.Title].ID +"/"
+            window.open(url);
+        });
+}
 
