@@ -1,5 +1,8 @@
 function updateNodes(input, force, svgNode, data, colorLink, colorNode, tooltipNode, timer, node, link) {
 
+        node = d3.selectAll('#graph3 .node')
+        link = d3.selectAll('#graph3 .link')
+
         if (typeof node != 'undefined') {
             node.remove();
             link.remove();
@@ -88,8 +91,11 @@ function updateNodes(input, force, svgNode, data, colorLink, colorNode, tooltipN
                 timer = setTimeout(function() {
                     input = d.name
                     updateScatter(d.name, data)
-                    updateNodes(input, force, svgNode, data, colorLink, colorNode, tooltipNode, timer, node, link)
+                    result = updateNodes(input, force, svgNode, data, colorLink, colorNode, tooltipNode, timer, node, link)
                     updateBarchart(input, data, barHeight, barWidth)
+                    node = result[0]
+                    link = result[1]
+                    input = result[2]
                     console.log(input)
                 }, 250)
                 tooltipNode.transition()

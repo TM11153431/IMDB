@@ -180,8 +180,11 @@ d3.json("../../IMDB/data/dataset.json", function(error, data) {
         input = document.getElementById("searchbox").value
 
         updateScatter(input, data)
-        updateNodes(input, force, svgNode, data, colorLink, colorNode, tooltipNode, timer, node, link)
+        result = updateNodes(input, force, svgNode, data, colorLink, colorNode, tooltipNode, timer, node, link)
         updateBarchart(input, data, barHeight, barWidth)
+        node = result[0]
+        link = result[1]
+        input = result[2]
     });
 
     
