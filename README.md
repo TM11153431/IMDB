@@ -1,4 +1,4 @@
-# IMDB
+# IMDB Proposal
 Visualisation of IMDB data
 Nathan Bijleveld
 Application visualises the data of IMDB. You can search for a movie and this application provides you with the relevant data.
