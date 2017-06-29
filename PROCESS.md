@@ -56,4 +56,7 @@ Improved scripts for scraping IMDB data. At first multiple files were used the r
 # day 16
 Changed python script and javascript and folder structure to change location of JSON file. After that worked on improving functions. One is added to another file. Also tried to add more and did many changes to achieve that, but in the end it didn't work out. So a big part had to change back. The problem is that a function that is initialized in imdb.js is called within a function in another javascript file (to which is linked in the html file). I thought it would work, but there was an error. It cost time to work on that. I will try to fix it coming days.
 
+# day 17
+Changed javscript functions. At first I tried to add all scatter related functions into one scatterdata.js file, but this is very hard. It is that hardbecause of the update functions, since when you update the scatter you also call the update functions for the node graph and for the barchart. Those functions also need their own special input arguments, so you also have to include those input arguments in the update function for the scatter and you have to include them in my imdb.js file. This was very quick getting hard and getting a mess, so I limited to just include the functions without the update functions in the scatterdata.js file. This is changed. I have to try if it's possible to arrange my update functions the same way.
+
 [![BCH compliance](https://bettercodehub.com/edge/badge/nathanbijleveld/IMDB?branch=master)](https://bettercodehub.com/)
