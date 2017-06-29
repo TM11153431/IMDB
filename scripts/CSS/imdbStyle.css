@@ -76,20 +76,20 @@ body, html {
 
 /* First image (Logo. Full height) */
 .bgimg-1 {
-    background-image: url('../doc/imdb1.jpg');
+    background-image: url('../../doc/imdb1.jpg');
     min-height: 100%;
 
 }
 
 /* Second image (Portfolio) */
 .bgimg-2 {
-    background-image: url("../doc/imdb2.jpg");
+    background-image: url("../../doc/imdb2.jpg");
     min-height: 400px;
 }
 
 /* Third image (Contact) */
 .bgimg-3 {
-    background-image: url("../doc/imdb3.jpg");
+    background-image: url("../../doc/imdb3.jpg");
     min-height: 400px;
 }
 
