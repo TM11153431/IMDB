@@ -17,6 +17,9 @@ Twee barcharts en een overzicht van aanbevelingen zijn mvp. De barcharts zouden 
 
 # IMDB Visualisation website information
 Deze website geeft een overzicht met IMDB data. De website is [hier](https://nathanbijleveld.github.io/IMDB/) te vinden.
+
 De gebruikte libraries zijn [hier](/libraries/) te vinden.
-De gebruikte scripts zijn [hier(/scripts) te vinden.
+
+De gebruikte scripts zijn [hier](/scripts) te vinden.
+
 Gemaakt door: Nathan Bijleveld (10590943)
