@@ -1,4 +1,4 @@
-d3.json("../../data/dataset.json", function(error, data) {
+d3.json("../../IMDB/data/dataset.json", function(error, data) {
 
     /******* This is the scatter plot ******/
 
