@@ -19,13 +19,20 @@ Mijn JSON file is zodanig ingedeeld dat deze bestaat uit filmtitels als keys, me
 
 ## Challenges
 De eerste challenge was om een goede scraper te bouwen, het was redelijk wat werk om deze uiteindelijk goed werkend te krijgen. Voornamelijk de gerelateerde films in het goede data formaat krijgen kostte veel denkwerk. Je moest goed stap voor stap bedenken wat het algoritme moest doen.
+
 Als grafiek die een overzicht van de films geeft heb ik voor een scatter gekozen. Het langzaam van vullen van de grafiek heb ik niet voor gekozen, omdat ik dat geen toevoeging vond. Ik was namelijk geinspireerd door de grafiek die het aantal gun deaths in amerika weergeeft, daar was het erg beschrijvend. Bij een scatter leek mij dat niet.
+
 De scatter en barchart waren redelijk makkelijk te maken. Het was lastiger om ervoor te zorgen dat de gekozen film wordt geupload en de daarvoor gekozen film weer normaal wordt weergegeven in de scatter, dat was wel een challenge.
+
 De relationship graph daarentegen kostte een stuk meer tijd. Zoals vermeld kostte het veel werk om de data hiervoor goed te ordenen(gedaan in de scraper). Het update van de grafiek daarna was lastig. De grafiek is gemaakt met force, dit kent niet zo'n update functie als ik bijvoorbeeld bij de barchart heb gebruikt.
 Dit kostte dus wat extra tijd om uit te zoeken, maar dat is uiteindelijk ook gelukt. De uitdaging die daarop volgde was een fout in de update functie, de tooltip gaf verkeerde kleuren en titels. Ik kwam erachter dat de nodes niet goed geupdate, werden. Concluderend heeft force redelijk tijd gekost, maar dat was het zeker waard. Ik vind het erg nuttig dat ik nu meer over force weet en het in de toekomst vaker kan gebruiken.
+
 De volgende challenge had te maken met de genres, je kan in de scatter selecteren op genre. Hier was het probleem dat bijvoorbeeld een film met drie genres al niet getoond werd als een van de drie genres unchecked was. Een ander probleem was dat als een highlighted dot niet meer terugkwamen als highlighted, als de betreffende genre werd gedeselecteerd en vervolgens geselecteerd. Er kwamen meer bugs bij kijken dan ik dacht, maar het was leerzaam en ik weet nu goed hoe ik een dergeljk vraagstuk de volgende keer slim aan kan pakken.
+
 Daarna was het een uitdaging om de grafieken mooi utigelijnd in een mooi template te krijgen. Dit was zorgde niet voor veel problemen maar ik had het nog niet eerder gedaan, dus het kostte wel wat werk. Maar het was ook weer een toevoeging om dit gedaan te hebben. Nu weet ik goed hoe het moet en dat is mooi, want het maakt je vsualisatie een stuk aantrekkelijker.
+
 Uiteindelijk was er de uitdaging om de code beter te krijgen. Ik heb functies per file georderd, dit was erg veel werk. Dit werd veroorzaakt door het feit dat alle drie de update functies aan elkaar verbonden zijn. Dus alle input argumenten moesten meegegeven worden. Alles was erg nauw verbonden. Het heeft me veel tijd gekost om dit zo te ordenene, maar het is wel een stuk overzichtelijker. Ik ben me nu ook meer bewust van de complexiteit van het gebruiken van een scope. De volgende keer bedenk ik dus ook van te voren beter hoe zoiets aan te pakken.
+
 Tenslotte heb ik in het algemeen ook veel gebruikt gemaakt tooltips, ik heb hier veel persoonlijke verbeteringen in gemaakt. Veel gebruikt dus ook weer veel nieuwe dingen geleerd. Vooral hoe de tooltip goed weer te geven, ook met behulp van css styling.
 
 ## Argument
